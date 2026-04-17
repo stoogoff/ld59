@@ -16,7 +16,7 @@ export class Timer {
 		const step = () => {
 			const current = (new Date()).getTime();
 
-			update({
+			this.#update({
 				total: current - start,
 				elapsed: current - last
 			});
@@ -35,7 +35,7 @@ export class Timer {
 	}
 
 	running() {
-		return timer != null;
+		return timer !== null;
 	}
 
 	toString() {
