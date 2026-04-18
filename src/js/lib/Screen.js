@@ -6,6 +6,12 @@ import { noop } from './utils.js'
 // could store the node for the screen here and hide/show it when the screen is activated
 export class Screen {
 	#components = []
+	#onComplete = noop
+
+	constructor(onComplete, components = []) {
+		this.#components = []
+		this.#onComplete = onComplete
+	}
 
 	get components() {
 		return this.#components
@@ -15,7 +21,11 @@ export class Screen {
 		components.forEach(component => this.#components.push(component))
 	}
 
-	init(config) {}
+	init(gfx) {}
+
+	complete(config) {
+		this.#onComplete(config)
+	}
 
 	update(time, controller) {
 		this.#components.forEach(component => {
@@ -45,6 +55,16 @@ export class Screen {
 				component.afterRender(gfx)
 			}
 		})
+	}
+
+	destroy() {
+		this.#components.forEach(component => {
+			if(component.destroy) {
+				component.destroy()
+			}
+		})
+
+		this.#components = []
 	}
 }
 

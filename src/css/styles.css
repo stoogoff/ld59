@@ -14,8 +14,10 @@ html, body, canvas {
 }
 
 /* HUD elements */
-.hud {
+#hud {
 	position: absolute;
+	top: 5px;
+	left: 5px;
 	color: white;
 	font-weight: bold;
 	background-color: red;
@@ -24,16 +26,6 @@ html, body, canvas {
 	width: 120px;
 	border: 1px solid black;	
 	z-index: 50;
-}
-
-#score {
-	top: 5px;
-	left: 5px;
-}
-
-#timer {
-	top: 5px;
-	right: 5px;
 }
 
 /* Pause screen */

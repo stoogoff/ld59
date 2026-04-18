@@ -8,9 +8,14 @@
 </head>
 <body>
 
-<div id="score" class="hud"></div>
-<div id="timer" class="hud"></div>
+<!-- hud -->
+<div id="hud">
+	<div id="tokens"></div>
+	<div id="timer"></div>
+	<div id="score"></div>
+</div>
 
+<!-- pause screen -->
 <div id="pause" class="hidden">
 	<div>
 		<h1>PAUSED</h1>
@@ -18,6 +23,7 @@
 	</div>
 </div>
 
+<!-- game screen -->
 <canvas id="canvas"></canvas>
 
 <script type="module">

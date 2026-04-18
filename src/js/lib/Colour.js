@@ -1,4 +1,6 @@
 
+import { clamp } from './utils.js'
+
 export class Colour {
 	constructor(r, g, b, a) {
 		if(r.constructor === Object) {
@@ -22,7 +24,7 @@ export class Colour {
 	}
 
 	copy(a) {
-		return new Colour(this.r, this.g, this.b, a || this.a)
+		return new Colour(this.r, this.g, this.b, clamp(a || this.a, 0, 1))
 	}
 
 	equals(colour) {
