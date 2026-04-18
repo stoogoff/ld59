@@ -1,5 +1,6 @@
 
 export * from './Atlas.js'
+export * from './Camera.js'
 export * from './Colour.js'
 export * from './Controller.js'
 export * from './Graphics.js'

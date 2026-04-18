@@ -57,6 +57,23 @@ export class Graphics {
 		this.#context.fillRect(rect.x, rect.y, rect.w, rect.h)
 	}
 
+	#circle(rect, colour) {
+		this.#context.beginPath()
+		this.#context.fillStyle = colour.toString()
+		this.#context.arc(rect.centroid.x, rect.centroid.y, rect.w / 2, 0, Math.PI * 2, true) 
+		this.#context.closePath()
+	}
+
+	drawCircle(rect, colour) {
+		this.#circle(rect, colour)
+		this.#context.stroke()
+	}
+
+	fillCircle(rect, colour) {
+		this.#circle(rect, colour)
+		this.#context.fill()
+	}
+
 	drawSprite(image, source, destination, flip, angle) {
 		if(flip) {
 			this.#context.save()

@@ -15,7 +15,7 @@ export class Screen {
 
 	update(time, controller) {
 		this.#components.forEach(component => {
-			if(component.update) {
+			if(component.canUpdate && component.update) {
 				component.update(time, controller)
 			}
 		})
@@ -25,19 +25,19 @@ export class Screen {
 		gfx.begin()
 
 		this.#components.forEach(component => {
-			if(component.beforeRender) {
+			if(component.canDraw && component.beforeRender) {
 				component.beforeRender(gfx)
 			}
 		})
 
 		this.#components.forEach(component => {
-			if(component.render) {
+			if(component.canDraw && component.render) {
 				component.render(gfx)
 			}
 		})
 
 		this.#components.forEach(component => {
-			if(component.afterRender) {
+			if(component.canDraw && component.afterRender) {
 				component.afterRender(gfx)
 			}
 		})

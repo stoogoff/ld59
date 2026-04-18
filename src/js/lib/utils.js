@@ -1,20 +1,4 @@
 
-export const Keys = {
-	ENTER: 13,
-	SPACE: 32,
-	LEFT: 37,
-	UP: 38,
-	RIGHT: 39,
-	DOWN: 40,
-	AUDIO: 77, // M for Mute
-	PAUSE: 80, // P for Pause
-}
-
-export const KeyState = {
-	DOWN: true,
-	UP: false,
-}
-
 export const noop = () => {}
 
 export const getRandomInt = (min, max) =>
@@ -34,8 +18,3 @@ export const clamp = (num, min, max) => {
 
 export const within = (num, min, max) =>
 	num >= min && num <= max;
-
-/*var viewport = new Rectangle(0, 0, 0);
-export const viewport = () => {
-	return viewport;
-};*/
