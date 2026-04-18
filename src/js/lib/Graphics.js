@@ -1,64 +1,87 @@
 
-export class Graphics {
-	constructor(canvas) {
-		var screen = canvas.constructor === String ? document.getElementById(canvas) : canvas;
-		this.context = screen.getContext('2d');
-		this.width = screen.offsetWidth;
-		this.height = screen.offsetHeight;
+import { Rectangle } from './Rectangle.js'
 
-		// this is global scope...
-		viewport = new Rectangle(0, 0, this.width, this.height);
+export class Graphics {
+	#context
+	#width
+	#height
+
+	constructor(canvas) {
+		const screen = canvas.constructor === String ? document.getElementById(canvas) : canvas
+		this.#context = screen.getContext('2d')
+
+		this.#width = screen.offsetWidth
+		this.#height = screen.offsetHeight
+
+		this.#context.canvas.width = this.#width
+		this.#context.canvas.height = this.#height
 	}
 
 	toString() {
-		return "[object Graphics]";
+		return "[object Graphics]"
+	}
+
+	get context() {
+		return this.#context
+	}
+
+	get width() {
+		return this.#width
+	}
+
+	get height() {
+		return this.#height
+	}
+
+	get viewport() {
+		return new Rectangle(0, 0, this.#width, this.#height)
 	}
 
 	begin() {
-		this.context.clearRect(0, 0, this.width, this.height);
+		this.#context.clearRect(0, 0, this.width, this.height)
 	}
 
 	end() {}
 
 	clear() {
-		this.context.clearRect(0, 0, this.width, this.height);
+		this.#context.clearRect(0, 0, this.width, this.height)
 	}
 
 	draw(rect, colour) {
-		this.context.strokeStyle = colour.toString();
-		this.context.strokeRect(rect.x, rect.y, rect.w, rect.h);
+		this.#context.strokeStyle = colour.toString()
+		this.#context.strokeRect(rect.x, rect.y, rect.w, rect.h)
 	}
 
 	fill(rect, colour) {
-		this.context.fillStyle = colour.toString();
-		this.context.fillRect(rect.x, rect.y, rect.w, rect.h);
+		this.#context.fillStyle = colour.toString()
+		this.#context.fillRect(rect.x, rect.y, rect.w, rect.h)
 	}
 
 	drawSprite(image, source, destination, flip, angle) {
 		if(flip) {
-			this.context.save();
-			this.context.translate(destination.x, destination.y);
-			this.context.scale(-1, 1);
-			this.context.translate(-(destination.w || source.w), 0);
-			destination.x = destination.y = 0;
+			this.#context.save()
+			this.#context.translate(destination.x, destination.y)
+			this.#context.scale(-1, 1)
+			this.#context.translate(-(destination.w || source.w), 0)
+			destination.x = destination.y = 0
 		}
 
 		if(angle) {
-			var offset = new Point(destination.x + (destination.w || source.w) / 2, destination.y + (destination.h || source.h));
-			this.context.save();
-			this.context.translate(offset.x, offset.y);
-			this.context.rotate(angle * (Math.PI / 180));
-			this.context.translate(-offset.x, -offset.y);
+			var offset = new Point(destination.x + (destination.w || source.w) / 2, destination.y + (destination.h || source.h))
+			this.#context.save()
+			this.#context.translate(offset.x, offset.y)
+			this.#context.rotate(angle * (Math.PI / 180))
+			this.#context.translate(-offset.x, -offset.y)
 		}
 
-		this.context.drawImage(image, source.x, source.y, source.w, source.h, destination.x, destination.y, destination.w || source.w, destination.h || source.h);
+		this.#context.drawImage(image, source.x, source.y, source.w, source.h, destination.x, destination.y, destination.w || source.w, destination.h || source.h)
 
 		if(flip || angle) {
-			this.context.restore();
+			this.#context.restore()
 		}
 	}
 
 	drawImage(image, source) {
-		this.context.drawImage(image, source.x, source.y);
+		this.#context.drawImage(image, source.x, source.y)
 	}
 }

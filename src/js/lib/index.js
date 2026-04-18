@@ -1,6 +1,7 @@
 
 export * from './Atlas.js'
 export * from './Colour.js'
+export * from './Controller.js'
 export * from './Graphics.js'
 export * from './Interval.js'
 export * from './Point.js'

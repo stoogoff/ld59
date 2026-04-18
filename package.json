@@ -1,0 +1,15 @@
+{
+  "name": "LD59",
+  "version": "1.0.0",
+  "description": "LD59 Game Jam.",
+  "author": "Stoo Goff",
+  "homepage": "https://github.com/stoogoff/ld59",
+  "repository": "github:stoogoff/ld59",
+	 "license": {
+    "type": "MIT",
+    "url": "https://opensource.org/license/mit"
+  },
+  "scripts": {
+     "serve": "cd src; python3 -m http.server"
+  }
+}

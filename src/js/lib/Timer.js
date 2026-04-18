@@ -1,51 +1,51 @@
 
 export class Timer {
-	#timer = null;
-	#update = null;
-	#interval = null;
+	#timer = null
+	#update = null
+	#interval = null
 
 	constructor(update, interval) {
-		this.#update = update;
-		this.#interval = interval;
+		this.#update = update
+		this.#interval = interval
 	}
 
 	start() {
-		const start = (new Date()).getTime();
-		let last = start;
+		const start = (new Date()).getTime()
+		let last = start
 
 		const step = () => {
-			const current = (new Date()).getTime();
+			const current = (new Date()).getTime()
 
 			this.#update({
 				total: current - start,
 				elapsed: current - last
-			});
+			})
 
-			last = current;
+			last = current
 		}
 
-		this.#timer = window.setInterval(step, this.#interval);
+		this.#timer = window.setInterval(step, this.#interval)
 	}
 
 	stop() {
-		window.clearInterval(this.#timer);
+		window.clearInterval(this.#timer)
 
-		this.#timer = null;
-		this.onstop();
+		this.#timer = null
+		this.onstop()
 	}
 
 	running() {
-		return timer !== null;
+		return timer !== null
 	}
 
 	toString() {
-		return "[object Timer]";
+		return "[object Timer]"
 	}
 
 	onstop() {}
 
 	restart() {
-		this.stop();
-		this.start();
+		this.stop()
+		this.start()
 	}
 }

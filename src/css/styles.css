@@ -1,0 +1,21 @@
+
+html {
+	background-color: orange;
+}
+
+body {
+	background-color: cyan;
+}
+
+canvas {
+	background-color: rgb(250,250,250);
+}
+
+html, body, canvas {
+	display: block;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	width: 100vw;
+	height: 100vh;
+}

@@ -1,13 +1,21 @@
 
-export const KEYS = {
+export const Keys = {
 	ENTER: 13,
 	SPACE: 32,
 	LEFT: 37,
 	UP: 38,
 	RIGHT: 39,
 	DOWN: 40,
-	AUDIO: 77, // M
+	AUDIO: 77, // M for Mute
+	PAUSE: 80, // P for Pause
 }
+
+export const KeyState = {
+	DOWN: true,
+	UP: false,
+}
+
+export const noop = () => {}
 
 export const getRandomInt = (min, max) =>
 	Math.floor(Math.random() * (max - min + 1)) + min;

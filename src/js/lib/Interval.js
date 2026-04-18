@@ -1,22 +1,24 @@
+
 export class Interval {
-	#elapsed = 0;
+	#elapsed = 0
+	#span
 
 	constructor(span) {
-		this.#span = span;
+		this.#span = span
 	}
 
 	next(time) {
-		this.#elapsed += time;
+		this.#elapsed += time
 
 		if(this.#elapsed > this.#span) {
-			this.#elapsed -= this.#span;
-			return true;
+			this.#elapsed -= this.#span
+			return true
 		}
 
-		return false;
+		return false
 	}
 	
 	reset() {
-		this.#elapsed = 0;
+		this.#elapsed = 0
 	}
 }
