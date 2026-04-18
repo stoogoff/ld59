@@ -13,6 +13,10 @@ export class Home {
 		this.#bounds = new Rectangle(centre.x, centre.y, 200, 200)
 	}
 
+	get bounds() {
+		return this.#bounds
+	}
+
 	render(gfx) {
 		gfx.fillCircle(this.#bounds, this.#colour)
 	}

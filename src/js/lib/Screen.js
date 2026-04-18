@@ -7,8 +7,12 @@ import { noop } from './utils.js'
 export class Screen {
 	#components = []
 
-	constructor(components = []) {
-		this.#components = components
+	get components() {
+		return this.#components
+	}
+
+	addComponents(components) {
+		components.forEach(component => this.#components.push(component))
 	}
 
 	init(config) {}
@@ -41,7 +45,6 @@ export class Screen {
 				component.afterRender(gfx)
 			}
 		})
-
 	}
 }
 

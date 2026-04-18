@@ -1,16 +1,5 @@
 
-html {
-	background-color: orange;
-}
-
-body {
-	background-color: cyan;
-}
-
-canvas {
-	background-color: rgb(250,250,250);
-}
-
+/* make canvas fit the screen */
 html, body, canvas {
 	display: block;
 	overflow: hidden;
@@ -18,4 +7,50 @@ html, body, canvas {
 	padding: 0;
 	width: 100vw;
 	height: 100vh;
+}
+
+.hidden {
+	display: none;
+}
+
+/* HUD elements */
+.hud {
+	position: absolute;
+	color: white;
+	font-weight: bold;
+	background-color: red;
+	padding: 2px;
+	font-size: 20px;
+	width: 120px;
+	border: 1px solid black;	
+	z-index: 50;
+}
+
+#score {
+	top: 5px;
+	left: 5px;
+}
+
+#timer {
+	top: 5px;
+	right: 5px;
+}
+
+/* Pause screen */
+#pause {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(0,0,0,0.7);
+	z-index: 100;
+	padding: 150px 200px 0;
+
+	div {
+		background-color: rgb(200,200,200);
+		border: 1px solid black;
+		padding: 20px;
+		text-align: center;
+	}
 }
