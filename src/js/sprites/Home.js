@@ -44,7 +44,7 @@ export class Home extends Sprite {
 
 	update(elapsed, controller) {
 		if(this.#fade) {
-			this.#colour = this.#colour.copy(1 - (this.#fade.elapsed / 500))
+			this.#colour = this.#colour.copy(1 - (this.#fade.elapsed / this.#fade.span))
 
 			if(this.#fade.next(elapsed)) {
 				this.canDraw = false

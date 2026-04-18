@@ -15,6 +15,10 @@ export class Colour {
 		this.a = a === undefined ? 1 : a
 	}
 
+	adjust(value) {
+		return new Colour(this.r * value, this.g * value, this.b * value)
+	}
+
 	toString() {
 		return "rgba(" + this.r + ", " + this.g + ", " + this.b + ", " + this.a + ")"
 	}

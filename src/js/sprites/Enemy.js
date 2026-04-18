@@ -13,6 +13,7 @@ const SIZE = 50
 
 export class Enemy extends Sprite {
 	#colour
+	#borderColour
 	#state = EnemyState.IDLE
 	#stateChanger = null
 	#target
@@ -28,6 +29,7 @@ export class Enemy extends Sprite {
 		super(new Rectangle(x, y, SIZE, SIZE))
 
 		this.#colour = colour
+		this.#borderColour = colour.adjust(0.25)
 		this.#setRandomTarget()
 		this.#setNewSpeed()
 		this.#pathAdd = new Interval(2000)
@@ -91,10 +93,14 @@ export class Enemy extends Sprite {
 			}
 		}
 
-		if(this.#stateChanger !== null && this.#stateChanger.next(elapsed)) {
-			this.#state = EnemyState.IDLE
-			this.#setNewSpeed()
-			this.#setRandomTarget()
+		if(this.#stateChanger !== null) {
+			this.#borderColour = this.#borderColour.copy(1 - (this.#stateChanger.elapsed / this.#stateChanger.span))
+
+			if(this.#stateChanger.next(elapsed)) {
+				this.#state = EnemyState.IDLE
+				this.#setNewSpeed()
+				this.#setRandomTarget()
+			}
 		}
 
 		if(this.#pathAdd.next(elapsed)) {
@@ -106,7 +112,7 @@ export class Enemy extends Sprite {
 		gfx.fill(this.bounds, this.#colour)
 
 		if(this.#state === EnemyState.PURSUING) {
-			gfx.draw(this.bounds, 'black')
+			gfx.draw(this.bounds, this.#borderColour)
 		}
 
 		// debug show target but maybe leave it in and draw something better
