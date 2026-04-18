@@ -68,10 +68,6 @@ export class GameScreen extends Screen {
 					)
 				)
 			}
-
-			/*cfg.paths.forEach(path => {
-				this.#walls.push(new Wall(path, cfg.previousColourPhase))
-			})*/
 		}
 
 		this.addComponents([
@@ -80,7 +76,6 @@ export class GameScreen extends Screen {
 			...this.#tokens,
 			...this.#enemies,
 			this.#player,
-			...this.#walls,
 		])
 	}
 
@@ -116,12 +111,6 @@ export class GameScreen extends Screen {
 			])
 		}
 
-		/*for(let i = 0; i < this.#walls.length; i++) {
-			if(this.#walls[i].collision(this.#player.bounds)) {
-				console.log('hit wall')
-			}
-		}*/
-
 		// TODO enemies which are close to the play should target it, not just during pulse
 
 		let playerIsHome = false
@@ -154,12 +143,9 @@ export class GameScreen extends Screen {
 
 		// time has run out or the player has been hit, so reset and start again
 		if(this.#countdown <= 0 || isHit) {
-			const paths = this.#enemies.map(enemy => enemy.path)
-
 			this.hideHUD()
 			this.complete({
 				currentScore: this.#score,
-				paths,
 			})
 		}
 

@@ -45,7 +45,6 @@ export const main = () => {
 		colourPhase: colourPhases.next(),
 		previousColourPhase: null,
 		countdown: 10000, // should be short for first run through
-		paths: [],
 	})
 
 	// DEBUG
@@ -54,7 +53,6 @@ export const main = () => {
 		colourPhase: colourPhases.next(),
 		previousColourPhase: colourPhases.current,//null,
 		countdown: 60000, // should be short for first run through
-		paths: [],
 	})*/
 
 	// set up the game loop which will update the screen then render it

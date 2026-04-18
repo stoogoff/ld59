@@ -19,8 +19,6 @@ export class Enemy extends Sprite {
 	#target
 	#angle
 	#speed
-	#path = []
-	#pathAdd
 
 	canDraw = true
 	canUpdate = true
@@ -32,11 +30,6 @@ export class Enemy extends Sprite {
 		this.#borderColour = colour.adjust(0.25)
 		this.#setRandomTarget()
 		this.#setNewSpeed()
-		this.#pathAdd = new Interval(2000)
-	}
-
-	get path() {
-		return this.#path
 	}
 
 	setPlayerTarget(target) {
@@ -101,10 +94,6 @@ export class Enemy extends Sprite {
 				this.#setNewSpeed()
 				this.#setRandomTarget()
 			}
-		}
-
-		if(this.#pathAdd.next(elapsed)) {
-			this.#path.push(this.bounds.centroid)
 		}
 	}
 
