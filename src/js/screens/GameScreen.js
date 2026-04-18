@@ -1,6 +1,6 @@
 
 import { Camera, Point, Rectangle, Screen } from '/js/lib/index.js'
-import { Enemy, Home, Player, Token, Wall } from '/js/sprites/index.js'
+import { Enemy, Home, Player, Token } from '/js/sprites/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
 const VELOCITY = 10
@@ -49,7 +49,7 @@ export class GameScreen extends Screen {
 			const visibleEnemyCount = getRandomInt(5, 10)
 			const hiddenEnemyCount = getRandomInt(1, 5)
 
-			for(let i = 0; i < visibleEnemyCount; i++) {
+			/*for(let i = 0; i < visibleEnemyCount; i++) {
 				this.#enemies.push(
 					new Enemy(
 						getRandomInt(bounds.x, bounds.w),
@@ -67,7 +67,15 @@ export class GameScreen extends Screen {
 						cfg.colourPhase
 					)
 				)
-			}
+			}*/
+
+			this.#enemies.push(
+					new Enemy(
+						0,
+						0,
+						cfg.previousColourPhase
+					)
+				)
 		}
 
 		this.addComponents([

@@ -20,6 +20,10 @@ export class Point {
 		return new Point(this.x, this.y)
 	}
 
+	abs() {
+		return new Point(Math.abs(this.x), Math.abs(this.y))
+	}
+
 	add(x, y) {
 		if(x.constructor === Point || x.constructor === Rectangle) {
 			y = x.y

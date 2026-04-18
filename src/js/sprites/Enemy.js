@@ -1,6 +1,6 @@
 
 import { Interval, Rectangle, Sprite } from '/js/lib/index.js'
-import { getRandomInt, within } from '/js/lib/utils.js'
+import { getRandomInt } from '/js/lib/utils.js'
 
 const EnemyState = {
 	IDLE: 0,
@@ -32,18 +32,26 @@ export class Enemy extends Sprite {
 		this.#setNewSpeed()
 	}
 
+	get target() {
+		return this.#target
+	}
+
+	get isFleeing() {
+		return this.#state === EnemyState.FLEEING
+	}
+
 	setPlayerTarget(target) {
 		this.#target = target
 		this.#state = EnemyState.PURSUING
 		this.#setNewSpeed()
-		this.#stateChanger = new Interval(getRandomInt(500, 2500))
+		this.#stateChanger = new Interval(getRandomInt(500, 2000))
 	}
 
 	setFleeTarget(target) {
 		this.#target = new Rectangle(target.x, target.y, SIZE, SIZE)
 		this.#state = EnemyState.FLEEING
 		this.#setNewSpeed()
-		this.#stateChanger = new Interval(getRandomInt(500, 2500))
+		this.#stateChanger = new Interval(getRandomInt(2000, 3000))
 	}
 
 	#setRandomTarget() {
@@ -65,25 +73,23 @@ export class Enemy extends Sprite {
 		else if(this.#state === EnemyState.FLEEING) {
 			this.#speed = getRandomInt(10, 14)
 		}
+
+		this.#speed = 5
 	}
 
 	update(elapsed, controller) {
-		let vector = this.#target.centroid.subtract(this.bounds.centroid)
-		const distance = Math.hypot(vector.x, vector.y)
+		const distance = this.#target.centroid.distance(this.bounds.centroid)
+		let vector = this.#target.centroid.subtract(this.bounds.centroid).divide(distance)
 
-		vector = vector.divide(distance)
+		if(!this.bounds.intersects(this.#target)) {
+			vector = vector.multiply(this.#speed)
 
-		if(within(vector.x, -1, 1) || within(vector.y, -1, 1)) {
-			if(!this.bounds.intersects(this.#target)) {
-				vector = vector.multiply(this.#speed)
-
-				this.bounds.x += vector.x
-				this.bounds.y += vector.y
-			}
-			else {
-				this.#setRandomTarget()
-				this.#setNewSpeed()
-			}
+			this.bounds.x += vector.x
+			this.bounds.y += vector.y
+		}
+		else {
+			this.#setRandomTarget()
+			this.#setNewSpeed()
 		}
 
 		if(this.#stateChanger !== null) {

@@ -1,5 +1,5 @@
 
-import { Colour, Interval, Rectangle, Sprite } from '/js/lib/index.js'
+import { Colour, Interval, Point, Rectangle, Sprite } from '/js/lib/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
 export class Home extends Sprite {
@@ -13,6 +13,15 @@ export class Home extends Sprite {
 		const centre = position.subtract(100)
 
 		super(new Rectangle(centre.x, centre.y, 200, 200))
+	}
+
+	// override collision to use circle geometry
+	collision(target) {
+		const dx = this.bounds.centroid.x - target.centroid.x
+		const dy = this.bounds.centroid.y - target.centroid.y
+		const distance = Math.sqrt(dx * dx + dy * dy)
+
+		return distance < (this.bounds.w / 2) + Math.min(target.w, target.h) / 2
 	}
 
 	playerIsHome(is) {
@@ -31,14 +40,54 @@ export class Home extends Sprite {
 		const home = this.bounds.centroid
 
 		for(let i = 0; i < enemies.length; i++) {
-			if(this.collision(enemies[i].bounds.grow(50))) {
+			if(enemies[i].isFleeing) {
+				continue
+			}
+
+			if(this.collision(enemies[i].bounds/*`.grow(50)*/)) {
+				/*let point = home.subtract(enemies[i].target.centroid)
+				const distance = Math.hypot(point.x, point.y)
+
+				point = point.divide(distance)//.multiply(getRandomInt(75, 100))*/
+
+				const distance = home.distance(enemies[i].bounds.centroid)
+				let point = home
+					.subtract(enemies[i].bounds.centroid)
+					.divide(distance)
+					.multiply(getRandomInt(75, 100))
+					//.add(enemies[i].bounds.centroid)
+
+			//	point = point.multiply(10)
+
+				//if(distance > 100) {
+					console.log({
+						home,
+						point,
+						distance,
+						target: enemies[i].bounds.centroid.subtract(point),
+						enemy: enemies[i].bounds.centroid,
+					})
+				//}
+
+				enemies[i].setFleeTarget(enemies[i].bounds.centroid.subtract(point))
+			}
+			/*if(this.collision(enemies[i].bounds.grow(50))) {
 				let point = home.subtract(enemies[i].bounds.centroid)
 				const distance = Math.hypot(point.x, point.y)
 
 				point = point.divide(distance).multiply(getRandomInt(75, 125))
 
+				if(distance > 100) {
+					console.log('bad distance', {
+						home,
+						point,
+						distance,
+						enemy: enemies[i].bounds.centroid,
+					})
+				}
+
 				enemies[i].setFleeTarget(point)
-			}
+			}*/
 		}
 	}
 
@@ -47,13 +96,13 @@ export class Home extends Sprite {
 			this.#colour = this.#colour.copy(1 - (this.#fade.elapsed / this.#fade.span))
 
 			if(this.#fade.next(elapsed)) {
-				this.canDraw = false
+				//this.canDraw = false
 				this.#fade = null
 			}
 		}
 	}
 
 	render(gfx) {
-		gfx.fillCircle(this.bounds, this.#colour)
+		gfx.fillCircle(this.bounds, this.#colour.copy(1))
 	}
 }
