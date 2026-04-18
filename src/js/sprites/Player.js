@@ -62,7 +62,7 @@ export class Player extends Sprite {
 		gfx.fillCircle(this.bounds, this.#colour)
 
 		this.#pulseTargets.forEach(target => {
-			gfx.drawLine(this.bounds.centroid, target, 'black')
+			gfx.drawLine([this.bounds.centroid, target], 'black')
 		})
 	}
 }

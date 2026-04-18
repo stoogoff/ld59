@@ -7,6 +7,10 @@ export class Interval {
 		this.#span = span
 	}
 
+	get elapsed() {
+		return this.#elapsed
+	}
+
 	next(time) {
 		this.#elapsed += time
 

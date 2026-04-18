@@ -10,7 +10,7 @@ export class Sprite {
 		return this.#bounds
 	}
 
-	hitTest(target) {
+	collision(target) {
 		return this.#bounds.intersects(target)
 	}
 }

@@ -73,11 +73,18 @@ export class Graphics {
 		this.#context.fill()
 	}
 
-	drawLine(start, end, colour) {
+	drawLine(points, colour, width = 2) {
+		if(points.length === 0) return
+
 		this.#context.beginPath()
-		this.#context.fillStyle = colour.toString()
-		this.#context.moveTo(start.x, start.y)
-		this.#context.lineTo(end.x, end.y)
+		this.#context.strokeStyle = colour.toString()
+		this.#context.lineWidth = width
+		this.#context.moveTo(points[0].x, points[0].y)
+
+		for(let i = 1; i < points.length; i++) {
+			this.#context.lineTo(points[i].x, points[i].y)
+		}
+
 		this.#context.closePath()
 		this.#context.stroke()
 	}

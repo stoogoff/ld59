@@ -1,4 +1,6 @@
 
+import { Rectangle } from './Rectangle.js'
+
 export class Point {
 	constructor(x, y) {
 		if(x.constructor === Object) {
@@ -19,37 +21,58 @@ export class Point {
 	}
 
 	add(x, y) {
+		if(x.constructor === Point || x.constructor === Rectangle) {
+			y = x.y
+			x = x.x
+		}
+
 		y = y || x
 
 		return new Point(this.x + x, this.y + y)
 	}
 
 	subtract(x, y) {
+		if(x.constructor === Point || x.constructor === Rectangle) {
+			y = x.y
+			x = x.x
+		}
+
 		y = y || x
 
 		return new Point(this.x - x, this.y - y)
 	}
 
 	divide(x, y) {
+		if(x.constructor === Point || x.constructor === Rectangle) {
+			y = x.y
+			x = x.x
+		}
+
 		y = y || x
 	
 		return new Point(this.x / x, this.y / y)
 	}
 
 	multiply(x, y) {
+		if(x.constructor === Point || x.constructor === Rectangle) {
+			y = x.y
+			x = x.x
+		}
+
 		y = y || x
 
 		return new Point(this.x * x, this.y * y)
 	}
 
-	angle(p) {
-		return Math.atan2(p.y - this.y, p.x - this.x)
-	}
+	distance(x, y) {
+		if(x.constructor === Point || x.constructor === Rectangle) {
+			y = x.y
+			x = x.x
+		}
 
-	distance(p) {
-		const x = this.x - p.x
-		const y = this.y - p.y
+		const dx = this.x - x
+		const dy = this.y - y
 		
-		return Math.sqrt(x * x + y * y)
+		return Math.sqrt(dx * dx + dy * dy)
 	}
 }

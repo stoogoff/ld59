@@ -28,7 +28,7 @@ export const main = () => {
 			config.colourPhase = colourPhases.next()
 		}
 
-		config.countdown = getRandomInt(5, 12) * 1000
+		config.countdown = getRandomInt(10, 20) * 1000
 
 		currentScreen.destroy()
 		currentScreen = null
@@ -44,8 +44,18 @@ export const main = () => {
 		currentScore: 0,
 		colourPhase: colourPhases.next(),
 		previousColourPhase: null,
-		countdown: 5000//30000,
+		countdown: 10000, // should be short for first run through
+		paths: [],
 	})
+
+	// DEBUG
+	/*currentScreen.init(gfx, {
+		currentScore: 0,
+		colourPhase: colourPhases.next(),
+		previousColourPhase: colourPhases.current,//null,
+		countdown: 60000, // should be short for first run through
+		paths: [],
+	})*/
 
 	// set up the game loop which will update the screen then render it
 	const gameLoop = new Timer((time) => {

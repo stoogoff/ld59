@@ -76,6 +76,12 @@ export class Rectangle {
 			y = x.y
 			x = x.x
 		}
+		else if(x.constructor === Point) {
+			w = h = 1
+			y = x.y
+			x = x.x
+		}
+
 		return !(this.x >= x + w || this.x + this.w <= x || this.y >= y + h || this.y + this.h <= y)
 	}
 

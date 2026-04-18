@@ -18,6 +18,8 @@ export class Enemy extends Sprite {
 	#target
 	#angle
 	#speed
+	#path = []
+	#pathAdd
 
 	canDraw = true
 	canUpdate = true
@@ -25,15 +27,14 @@ export class Enemy extends Sprite {
 	constructor(x, y, colour) {
 		super(new Rectangle(x, y, SIZE, SIZE))
 
-		this.#target = new Rectangle(
-			getRandomInt(x - DISTANCE, x + DISTANCE * 2),
-			getRandomInt(y - DISTANCE, y + DISTANCE * 2),
-			SIZE,
-			SIZE
-		)
 		this.#colour = colour
-		
+		this.#setRandomTarget()
 		this.#setNewSpeed()
+		this.#pathAdd = new Interval(2000)
+	}
+
+	get path() {
+		return this.#path
 	}
 
 	setPlayerTarget(target) {
@@ -67,20 +68,22 @@ export class Enemy extends Sprite {
 			this.#speed = getRandomInt(6, 10)
 		}
 		else if(this.#state === EnemyState.FLEEING) {
-			this.#speed = getRandomInt(8, 14)
+			this.#speed = getRandomInt(10, 14)
 		}
 	}
 
 	update(elapsed, controller) {
-		let vector = this.#target.centroid.subtract(this.bounds.x, this.bounds.y)
+		let vector = this.#target.centroid.subtract(this.bounds.centroid)
 		const distance = Math.hypot(vector.x, vector.y)
 
-		vector =  vector.divide(distance)
+		vector = vector.divide(distance)
 
 		if(within(vector.x, -1, 1) || within(vector.y, -1, 1)) {
 			if(!this.bounds.intersects(this.#target)) {
-				this.bounds.x += vector.x * this.#speed
-				this.bounds.y += vector.y * this.#speed
+				vector = vector.multiply(this.#speed)
+
+				this.bounds.x += vector.x
+				this.bounds.y += vector.y
 			}
 			else {
 				this.#setRandomTarget()
@@ -93,11 +96,21 @@ export class Enemy extends Sprite {
 			this.#setNewSpeed()
 			this.#setRandomTarget()
 		}
+
+		if(this.#pathAdd.next(elapsed)) {
+			this.#path.push(this.bounds.centroid)
+		}
 	}
 
 	render(gfx) {
 		gfx.fill(this.bounds, this.#colour)
-		//gfx.fillCircle(this.#target, 'black')
-		//gfx.draw(this.bounds, 'black')
+
+		if(this.#state === EnemyState.PURSUING) {
+			gfx.draw(this.bounds, 'black')
+		}
+
+		// debug show target but maybe leave it in and draw something better
+		gfx.fillCircle(new Rectangle(this.#target.centroid.x, this.#target.centroid.y, 10, 10), 'black')
+		gfx.drawLine([this.bounds.centroid, this.#target.centroid], 'white')
 	}
 }

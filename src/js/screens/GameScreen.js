@@ -1,6 +1,6 @@
 
 import { Camera, Point, Rectangle, Screen } from '/js/lib/index.js'
-import { Enemy, Home, Player, Token } from '/js/sprites/index.js'
+import { Enemy, Home, Player, Token, Wall } from '/js/sprites/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
 const VELOCITY = 10
@@ -12,6 +12,7 @@ export class GameScreen extends Screen {
 	#camera
 	#tokens = []
 	#enemies = []
+	#walls = []
 	#pickedTokens = 0
 	#score = 0
 	#countdown = 10000
@@ -45,9 +46,10 @@ export class GameScreen extends Screen {
 		}
 
 		if(cfg.previousColourPhase) {
-			const enemyCount = getRandomInt(3, 10)
+			const visibleEnemyCount = getRandomInt(5, 10)
+			const hiddenEnemyCount = getRandomInt(1, 5)
 
-			for(let i = 0; i < enemyCount; i++) {
+			for(let i = 0; i < visibleEnemyCount; i++) {
 				this.#enemies.push(
 					new Enemy(
 						getRandomInt(bounds.x, bounds.w),
@@ -56,6 +58,20 @@ export class GameScreen extends Screen {
 					)
 				)
 			}
+
+			for(let i = 0; i < hiddenEnemyCount; i++) {
+				this.#enemies.push(
+					new Enemy(
+						getRandomInt(bounds.x, bounds.w),
+						getRandomInt(bounds.y, bounds.h),
+						cfg.colourPhase
+					)
+				)
+			}
+
+			/*cfg.paths.forEach(path => {
+				this.#walls.push(new Wall(path, cfg.previousColourPhase))
+			})*/
 		}
 
 		this.addComponents([
@@ -63,7 +79,8 @@ export class GameScreen extends Screen {
 			this.#home,
 			...this.#tokens,
 			...this.#enemies,
-			this.#player
+			this.#player,
+			...this.#walls,
 		])
 	}
 
@@ -74,7 +91,7 @@ export class GameScreen extends Screen {
 		for(let i = 0; i < this.#tokens.length; i++) {
 			if(!this.#tokens[i].canDraw) continue
 
-			if(this.#player.hitTest(this.#tokens[i].bounds)) {
+			if(this.#player.collision(this.#tokens[i].bounds)) {
 				this.#tokens[i].canDraw = false
 				this.#pickedTokens++
 			}
@@ -99,53 +116,50 @@ export class GameScreen extends Screen {
 			])
 		}
 
+		/*for(let i = 0; i < this.#walls.length; i++) {
+			if(this.#walls[i].collision(this.#player.bounds)) {
+				console.log('hit wall')
+			}
+		}*/
+
+		// TODO enemies which are close to the play should target it, not just during pulse
+
 		let playerIsHome = false
 
 		// player in home space
-		if(this.#player.hitTest(this.#home.bounds)) {
+		if(this.#player.collision(this.#home.bounds)) {
 			this.#score += this.#pickedTokens * TOKEN_SCORE
 			this.#pickedTokens = 0
-			this.#home.playerIsHome(true)
 
 			playerIsHome = true
 		}
 
 		this.#home.playerIsHome(playerIsHome)
-
 		this.#countdown -= time
 
-		// player is safe in home space, otherwise hittest enemies
+		// player is safe in home space, otherwise collision enemies
 		let isHit = false
 
 		if(!playerIsHome) {
 			for(let i = 0; i < this.#enemies.length; i++) {
-				if(this.#player.hitTest(this.#enemies[i].bounds)) {
+				if(this.#player.collision(this.#enemies[i].bounds)) {
 					isHit = true
 					break
 				}
 			}
 		}
 
-		// enemies should move away from home
-		const home = this.#home.bounds.centroid
-
-		for(let i = 0; i < this.#enemies.length; i++) {
-			if(this.#home.hitTest(this.#enemies[i].bounds.grow(30))) {
-				const enemy = this.#enemies[i].bounds.centroid
-				const distance = home.distance(enemy)
-				const vector = home.subtract(enemy.x, enemy.y).divide(distance, distance)
-
-				const target = enemy.subtract(vector.x, vector.y).multiply(100)
-
-				this.#enemies[i].setFleeTarget(target)
-			}
-		}
+		// repulse enemies from home space
+		this.#home.repulseEnemies(this.#enemies)
 
 		// time has run out or the player has been hit, so reset and start again
 		if(this.#countdown <= 0 || isHit) {
+			const paths = this.#enemies.map(enemy => enemy.path)
+
 			this.hideHUD()
 			this.complete({
-				currentScore: this.#score
+				currentScore: this.#score,
+				paths,
 			})
 		}
 
