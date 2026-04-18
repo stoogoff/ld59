@@ -1,6 +1,6 @@
 
 import { Camera, Point, Rectangle, Screen } from '/js/lib/index.js'
-import { Background, Home, Player, Token } from '/js/sprites/index.js'
+import { Enemy, Home, Player, Token } from '/js/sprites/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
 const VELOCITY = 10
@@ -11,6 +11,7 @@ export class GameScreen extends Screen {
 	#player
 	#camera
 	#tokens = []
+	#enemies = []
 	#pickedTokens = 0
 	#score = 0
 	#countdown = 10000
@@ -30,19 +31,32 @@ export class GameScreen extends Screen {
 
 		const size = 1000
 		const bounds = new Rectangle(-size, -size, gfx.width + size * 2, gfx.height + size * 2)
-		const background = new Background(bounds, cfg.colourPhase)
 
-		console.log(cfg.colourPhase)
+		gfx.background = cfg.colourPhase
 
 		this.#camera = new Camera(new Point(0, 0), bounds, VELOCITY)
 		this.#player = new Player(gfx.viewport.centroid, VELOCITY)
 		this.#home = new Home(gfx.viewport.centroid)
 
-		for(let i = 0; i < 10; i++) {
+		const tokenCount = getRandomInt(10, 50)
+
+		for(let i = 0; i < tokenCount; i++) {
 			this.#tokens.push(new Token(getRandomInt(bounds.x, bounds.w), getRandomInt(bounds.y, bounds.h)))
 		}
 
-		this.addComponents([background, this.#camera, this.#home, ...this.#tokens, this.#player])
+		const enemyCount = getRandomInt(5, 20)
+
+		for(let i = 0; i < enemyCount; i++) {
+			this.#enemies.push(new Enemy(getRandomInt(bounds.x, bounds.w), getRandomInt(bounds.y, bounds.h)))
+		}
+
+		this.addComponents([
+			this.#camera,
+			this.#home,
+			...this.#tokens,
+			...this.#enemies,
+			this.#player
+		])
 	}
 
 	update(time, controller) {
@@ -62,8 +76,10 @@ export class GameScreen extends Screen {
 		if(this.#player.hitTest(this.#home.bounds)) {
 			this.#score += this.#pickedTokens * TOKEN_SCORE
 			this.#pickedTokens = 0
-
-			// TODO display of home space should change somehow
+			this.#home.playerIsHome(true)
+		}
+		else {
+			this.#home.playerIsHome(false)
 		}
 
 		this.#countdown -= time

@@ -10,7 +10,7 @@ export const main = () => {
 	const colourPhases = new Cycle([
 		new Colour(44, 122, 36),
 		new Colour(235, 72, 121),
-		new Colour(17, 38, 117),
+		new Colour(50, 85, 209),
 	])
 
 	const transitionManager = config => {
@@ -40,7 +40,7 @@ export const main = () => {
 	currentScreen.init(gfx, {
 		currentScore: 0,
 		colourPhase: colourPhases.next(),
-		countdown: 10000,
+		countdown: getRandomInt(5, 12) * 1000,
 	})
 
 	// set up the game loop which will update the screen then render it

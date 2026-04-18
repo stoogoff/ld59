@@ -3,7 +3,8 @@ import { Colour, Rectangle } from '/js/lib/index.js'
 
 export class Home {
 	#bounds
-	#colour = new Colour(118, 240, 42, 0.7)
+	#colour = new Colour(118, 240, 42, 1)
+	#isHome = true
 
 	canDraw = true
 
@@ -15,6 +16,10 @@ export class Home {
 
 	get bounds() {
 		return this.#bounds
+	}
+
+	playerIsHome(is) {
+		this.canDraw = is
 	}
 
 	render(gfx) {

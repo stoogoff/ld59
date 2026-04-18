@@ -2,16 +2,17 @@
 import { Rectangle } from './Rectangle.js'
 
 export class Graphics {
+	#screen
 	#context
 	#width
 	#height
 
 	constructor(canvas) {
-		const screen = canvas.constructor === String ? document.getElementById(canvas) : canvas
-		this.#context = screen.getContext('2d')
+		this.#screen = canvas.constructor === String ? document.getElementById(canvas) : canvas
+		this.#context = this.#screen.getContext('2d')
 
-		this.#width = screen.offsetWidth
-		this.#height = screen.offsetHeight
+		this.#width = this.#screen.offsetWidth
+		this.#height = this.#screen.offsetHeight
 
 		this.#context.canvas.width = this.#width
 		this.#context.canvas.height = this.#height
@@ -19,6 +20,10 @@ export class Graphics {
 
 	toString() {
 		return "[object Graphics]"
+	}
+
+	set background(colour) {
+		this.#screen.style.backgroundColor = colour.toString()
 	}
 
 	get context() {
@@ -38,12 +43,6 @@ export class Graphics {
 	}
 
 	begin() {
-		this.#context.clearRect(0, 0, this.width, this.height)
-	}
-
-	end() {}
-
-	clear() {
 		this.#context.clearRect(0, 0, this.width, this.height)
 	}
 

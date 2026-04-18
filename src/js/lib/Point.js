@@ -41,4 +41,8 @@ export class Point {
 
 		return new Point(this.x * x, this.y * y)
 	}
+
+	angle(p) {
+		return Math.atan2(p.y - this.y, p.x - this.x)
+	}
 }
