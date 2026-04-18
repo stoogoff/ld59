@@ -73,6 +73,15 @@ export class Graphics {
 		this.#context.fill()
 	}
 
+	drawLine(start, end, colour) {
+		this.#context.beginPath()
+		this.#context.fillStyle = colour.toString()
+		this.#context.moveTo(start.x, start.y)
+		this.#context.lineTo(end.x, end.y)
+		this.#context.closePath()
+		this.#context.stroke()
+	}
+
 	drawSprite(image, source, destination, flip, angle) {
 		if(flip) {
 			this.#context.save()

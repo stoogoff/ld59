@@ -1,20 +1,20 @@
 
-import { Colour, Point, Rectangle } from '/js/lib/index.js'
+import { Interval, Rectangle, Sprite } from '/js/lib/index.js'
 import { getRandomInt, within } from '/js/lib/utils.js'
 
 const EnemyState = {
 	IDLE: 0,
 	PURSUING: 1,
-	GIVING_UP: 2,
+	FLEEING: 2,
 }
 
 const DISTANCE = 150
 const SIZE = 50
 
-export class Enemy {
-	#bounds
+export class Enemy extends Sprite {
 	#colour
 	#state = EnemyState.IDLE
+	#stateChanger = null
 	#target
 	#angle
 	#speed
@@ -22,61 +22,82 @@ export class Enemy {
 	canDraw = true
 	canUpdate = true
 
-	constructor(x, y) {
+	constructor(x, y, colour) {
+		super(new Rectangle(x, y, SIZE, SIZE))
+
 		this.#target = new Rectangle(
 			getRandomInt(x - DISTANCE, x + DISTANCE * 2),
 			getRandomInt(y - DISTANCE, y + DISTANCE * 2),
 			SIZE,
 			SIZE
 		)
-		this.#bounds = new Rectangle(x, y, SIZE, SIZE)
-		this.#colour = new Colour(176, 176, 176)
+		this.#colour = colour
 		
 		this.#setNewSpeed()
+	}
+
+	setPlayerTarget(target) {
+		this.#target = target
+		this.#state = EnemyState.PURSUING
+		this.#setNewSpeed()
+		this.#stateChanger = new Interval(getRandomInt(500, 2500))
+	}
+
+	setFleeTarget(target) {
+		this.#target = new Rectangle(target.x, target.y, SIZE, SIZE)
+		this.#state = EnemyState.FLEEING
+		this.#setNewSpeed()
+		this.#stateChanger = new Interval(getRandomInt(500, 2500))
+	}
+
+	#setRandomTarget() {
+		this.#target = new Rectangle(
+			getRandomInt(this.bounds.x - DISTANCE, this.bounds.x + DISTANCE * 2),
+			getRandomInt(this.bounds.y - DISTANCE, this.bounds.y + DISTANCE * 2),
+			SIZE,
+			SIZE
+		)
 	}
 
 	#setNewSpeed() {
 		if(this.#state === EnemyState.IDLE) {
 			this.#speed = getRandomInt(2, 4)
 		}
+		else if(this.#state === EnemyState.PURSUING){
+			this.#speed = getRandomInt(6, 10)
+		}
+		else if(this.#state === EnemyState.FLEEING) {
+			this.#speed = getRandomInt(8, 14)
+		}
 	}
 
-	update(time, controller) {
-		// TODO if the player is close converge on them
-		// TODO if the player activates their pulse increase the range of the pulse
-		// TODO they should move a bit if they're idle
-		// TODO they should pursue the player but give up after a few frames if the player is out of range
+	update(elapsed, controller) {
+		let vector = this.#target.centroid.subtract(this.bounds.x, this.bounds.y)
+		const distance = Math.hypot(vector.x, vector.y)
 
-		if(this.#state === EnemyState.IDLE) {
-			// go to target
-			// if at target pick a random nearby point
-			let vecX = this.#target.x - this.#bounds.x
-			let vecY = this.#target.y - this.#bounds.y
-			let dist = Math.hypot(vecX, vecY)
+		vector =  vector.divide(distance)
 
-			vecX /= dist
-			vecY /= dist
-
-			if(within(vecX, -1, 1) || within(vecY, -1, 1)) {
-				if(!this.#bounds.intersects(this.#target)) {
-					this.#bounds.x += vecX * this.#speed
-					this.#bounds.y += vecY * this.#speed
-				}
-				else {
-					this.#target = new Rectangle(
-						getRandomInt(this.#bounds.x - DISTANCE, this.#bounds.x + DISTANCE * 2),
-						getRandomInt(this.#bounds.y - DISTANCE, this.#bounds.y + DISTANCE * 2),
-						SIZE,
-						SIZE
-					)
-					this.#setNewSpeed()
-				}
+		if(within(vector.x, -1, 1) || within(vector.y, -1, 1)) {
+			if(!this.bounds.intersects(this.#target)) {
+				this.bounds.x += vector.x * this.#speed
+				this.bounds.y += vector.y * this.#speed
 			}
+			else {
+				this.#setRandomTarget()
+				this.#setNewSpeed()
+			}
+		}
+
+		if(this.#stateChanger !== null && this.#stateChanger.next(elapsed)) {
+			this.#state = EnemyState.IDLE
+			this.#setNewSpeed()
+			this.#setRandomTarget()
 		}
 	}
 
 	render(gfx) {
-		gfx.fill(this.#bounds, this.#colour)
-		gfx.fillCircle(new Rectangle(this.#target.x, this.#target.y, 30, 30), 'black')
+		gfx.fill(this.bounds, this.#colour)
+		//gfx.fillCircle(this.#target, 'black')
+		//gfx.draw(this.bounds, 'black')
 	}
 }

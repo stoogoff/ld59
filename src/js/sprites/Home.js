@@ -1,8 +1,7 @@
 
-import { Colour, Rectangle } from '/js/lib/index.js'
+import { Colour, Rectangle, Sprite } from '/js/lib/index.js'
 
-export class Home {
-	#bounds
+export class Home extends Sprite {
 	#colour = new Colour(118, 240, 42, 1)
 	#isHome = true
 
@@ -11,11 +10,7 @@ export class Home {
 	constructor(position) {
 		const centre = position.subtract(100)
 
-		this.#bounds = new Rectangle(centre.x, centre.y, 200, 200)
-	}
-
-	get bounds() {
-		return this.#bounds
+		super(new Rectangle(centre.x, centre.y, 200, 200))
 	}
 
 	playerIsHome(is) {
@@ -23,6 +18,6 @@ export class Home {
 	}
 
 	render(gfx) {
-		gfx.fillCircle(this.#bounds, this.#colour)
+		gfx.fillCircle(this.bounds, this.#colour)
 	}
 }

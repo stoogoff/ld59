@@ -7,6 +7,10 @@ export class Cycle {
 		this.#array = array
 	}
 
+	get current() {
+		return this.#array[this.#index]
+	}
+
 	next() {
 		const output = this.#array[this.#index]
 

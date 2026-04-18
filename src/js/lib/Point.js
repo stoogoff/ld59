@@ -18,7 +18,7 @@ export class Point {
 		return new Point(this.x, this.y)
 	}
 
-	add(point) {
+	add(x, y) {
 		y = y || x
 
 		return new Point(this.x + x, this.y + y)
@@ -44,5 +44,12 @@ export class Point {
 
 	angle(p) {
 		return Math.atan2(p.y - this.y, p.x - this.x)
+	}
+
+	distance(p) {
+		const x = this.x - p.x
+		const y = this.y - p.y
+		
+		return Math.sqrt(x * x + y * y)
 	}
 }

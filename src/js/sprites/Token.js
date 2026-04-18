@@ -1,22 +1,17 @@
 
-import { Colour, Rectangle } from '/js/lib/index.js'
+import { Colour, Rectangle, Sprite } from '/js/lib/index.js'
 
-export class Token {
-	#bounds
+export class Token extends Sprite {
 	#colour
 
 	canDraw = true
 
 	constructor(x, y) {
-		this.#bounds = new Rectangle(x, y, 20, 20)
+		super(new Rectangle(x, y, 20, 20))
 		this.#colour = new Colour(232, 222, 19)
 	}
 
-	get bounds() {
-		return this.#bounds
-	}
-
 	render(gfx) {
-		gfx.fillCircle(this.#bounds, this.#colour)
+		gfx.fillCircle(this.bounds, this.#colour)
 	}
 }

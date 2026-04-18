@@ -44,10 +44,18 @@ export class GameScreen extends Screen {
 			this.#tokens.push(new Token(getRandomInt(bounds.x, bounds.w), getRandomInt(bounds.y, bounds.h)))
 		}
 
-		const enemyCount = getRandomInt(5, 20)
+		if(cfg.previousColourPhase) {
+			const enemyCount = getRandomInt(3, 10)
 
-		for(let i = 0; i < enemyCount; i++) {
-			this.#enemies.push(new Enemy(getRandomInt(bounds.x, bounds.w), getRandomInt(bounds.y, bounds.h)))
+			for(let i = 0; i < enemyCount; i++) {
+				this.#enemies.push(
+					new Enemy(
+						getRandomInt(bounds.x, bounds.w),
+						getRandomInt(bounds.y, bounds.h),
+						cfg.previousColourPhase
+					)
+				)
+			}
 		}
 
 		this.addComponents([
@@ -72,30 +80,79 @@ export class GameScreen extends Screen {
 			}
 		}
 
+		// the player has sent out a signal attracting all enemies
+		if(this.#player.isPulsing) {
+			this.#enemies.forEach(enemy => enemy.setPlayerTarget(this.#player.bounds))
+
+			const closest = this.#tokens
+				.filter(token => token.canDraw)
+				.toSorted((a, b) => {
+					a = a.bounds.centroid.distance(this.#player.bounds.centroid)
+					b = b.bounds.centroid.distance(this.#player.bounds.centroid)
+
+					return a === b ? 0 : (a < b ? -1 : 1)
+				})
+
+			this.#player.setPulseTargets([
+				this.#home.bounds.centroid,
+				...closest.slice(0, 2).map(token => token.bounds.centroid)
+			])
+		}
+
+		let playerIsHome = false
+
 		// player in home space
 		if(this.#player.hitTest(this.#home.bounds)) {
 			this.#score += this.#pickedTokens * TOKEN_SCORE
 			this.#pickedTokens = 0
 			this.#home.playerIsHome(true)
+
+			playerIsHome = true
 		}
-		else {
-			this.#home.playerIsHome(false)
-		}
+
+		this.#home.playerIsHome(playerIsHome)
 
 		this.#countdown -= time
 
-		// update HUD
-		this.#nodeTokens.innerHTML = `Tokens: ${this.#pickedTokens}`
-		this.#nodeTimer.innerHTML = `Time: ${this.#countdown / 1000}`
-		this.#nodeScore.innerHTML = `Score: ${this.#score}`
+		// player is safe in home space, otherwise hittest enemies
+		let isHit = false
 
-		// time has run out reset and start again
-		if(this.#countdown <= 0) {
+		if(!playerIsHome) {
+			for(let i = 0; i < this.#enemies.length; i++) {
+				if(this.#player.hitTest(this.#enemies[i].bounds)) {
+					isHit = true
+					break
+				}
+			}
+		}
+
+		// enemies should move away from home
+		const home = this.#home.bounds.centroid
+
+		for(let i = 0; i < this.#enemies.length; i++) {
+			if(this.#home.hitTest(this.#enemies[i].bounds.grow(30))) {
+				const enemy = this.#enemies[i].bounds.centroid
+				const distance = home.distance(enemy)
+				const vector = home.subtract(enemy.x, enemy.y).divide(distance, distance)
+
+				const target = enemy.subtract(vector.x, vector.y).multiply(100)
+
+				this.#enemies[i].setFleeTarget(target)
+			}
+		}
+
+		// time has run out or the player has been hit, so reset and start again
+		if(this.#countdown <= 0 || isHit) {
 			this.hideHUD()
 			this.complete({
 				currentScore: this.#score
 			})
 		}
+
+		// update HUD
+		this.#nodeTokens.innerHTML = `Tokens: ${this.#pickedTokens}`
+		this.#nodeTimer.innerHTML = `Time: ${this.#countdown / 1000}`
+		this.#nodeScore.innerHTML = `Score: ${this.#score}`
 	}
 
 	hideHUD() {

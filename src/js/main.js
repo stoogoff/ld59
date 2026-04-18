@@ -20,6 +20,9 @@ export const main = () => {
 			? new PhaseScreen(transitionManager)
 			: new GameScreen(transitionManager)
 
+		// keep the last colour phase as enemies will be that 
+		config.previousColourPhase = colourPhases.current
+
 		if(nextScreen instanceof PhaseScreen) {
 			// change the colour phase
 			config.colourPhase = colourPhases.next()
@@ -40,7 +43,8 @@ export const main = () => {
 	currentScreen.init(gfx, {
 		currentScore: 0,
 		colourPhase: colourPhases.next(),
-		countdown: getRandomInt(5, 12) * 1000,
+		previousColourPhase: null,
+		countdown: 5000//30000,
 	})
 
 	// set up the game loop which will update the screen then render it
