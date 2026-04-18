@@ -1,6 +1,6 @@
 
 import { Camera, Point, Rectangle, Screen } from '/js/lib/index.js'
-import { Home, Player, Token } from '/js/sprites/index.js'
+import { Background, Home, Player, Token } from '/js/sprites/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
 const VELOCITY = 10
@@ -20,6 +20,7 @@ export class GameScreen extends Screen {
 
 	init(gfx, cfg) {
 		this.#score = cfg.currentScore
+		this.#countdown = cfg.countdown
 
 		this.#nodeScore = document.getElementById('score')
 		this.#nodeTimer = document.getElementById('timer')
@@ -27,7 +28,11 @@ export class GameScreen extends Screen {
 
 		this.showHUD()
 
-		const bounds = new Rectangle(-100, -100, gfx.width + 100, gfx.height + 100)
+		const size = 1000
+		const bounds = new Rectangle(-size, -size, gfx.width + size * 2, gfx.height + size * 2)
+		const background = new Background(bounds, cfg.colourPhase)
+
+		console.log(cfg.colourPhase)
 
 		this.#camera = new Camera(new Point(0, 0), bounds, VELOCITY)
 		this.#player = new Player(gfx.viewport.centroid, VELOCITY)
@@ -37,7 +42,7 @@ export class GameScreen extends Screen {
 			this.#tokens.push(new Token(getRandomInt(bounds.x, bounds.w), getRandomInt(bounds.y, bounds.h)))
 		}
 
-		this.addComponents([this.#camera, this.#home, ...this.#tokens, this.#player])
+		this.addComponents([background, this.#camera, this.#home, ...this.#tokens, this.#player])
 	}
 
 	update(time, controller) {

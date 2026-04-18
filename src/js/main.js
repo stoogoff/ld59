@@ -1,24 +1,31 @@
 
-import {
-	Controller,
-	Keys,
-	Graphics,
-	Timer,
-} from '/js/lib/index.js'
+import { Colour, Controller, Keys, Graphics, Timer } from '/js/lib/index.js'
+import { getRandomInt } from '/js/lib/utils.js'
 import { GameScreen, PauseScreen, PhaseScreen } from '/js/screens/index.js'
+import { Cycle } from '/js/helpers/Cycle.js'
 
 export const main = () => {
 	const controller = new Controller()
 	const gfx = new Graphics('canvas')
+	const colourPhases = new Cycle([
+		new Colour(44, 122, 36),
+		new Colour(235, 72, 121),
+		new Colour(17, 38, 117),
+	])
 
 	const transitionManager = config => {
 		gameLoop.stop()
-		console.log(config)
 
-		// TODO change the colour phase
 		const nextScreen = currentScreen instanceof GameScreen
 			? new PhaseScreen(transitionManager)
 			: new GameScreen(transitionManager)
+
+		if(nextScreen instanceof PhaseScreen) {
+			// change the colour phase
+			config.colourPhase = colourPhases.next()
+		}
+
+		config.countdown = getRandomInt(5, 12) * 1000
 
 		currentScreen.destroy()
 		currentScreen = null
@@ -31,11 +38,12 @@ export const main = () => {
 	let currentScreen = new GameScreen(transitionManager)
 
 	currentScreen.init(gfx, {
-		currentScore: 0
+		currentScore: 0,
+		colourPhase: colourPhases.next(),
+		countdown: 10000,
 	})
 
 	// set up the game loop which will update the screen then render it
-	// change screen for loading, menu, game over etc
 	const gameLoop = new Timer((time) => {
 		if(!currentScreen) {
 			gameLoop.stop()
@@ -60,6 +68,6 @@ export const main = () => {
 		controller.releaseKey(evt.keyCode)
 	})
 
-	// after everything is set up
+	// after everything is set up start
 	gameLoop.start()
 }
