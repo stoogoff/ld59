@@ -94,9 +94,9 @@ export class Graphics {
 		if(flip) {
 			this.#context.save()
 			this.#context.translate(destination.x, destination.y)
-			this.#context.scale(-1, 1)
-			this.#context.translate(-(destination.w || source.w), 0)
-			destination.x = destination.y = 0
+			this.#context.scale(1, -1)
+			//this.#context.translate(-(destination.w || source.w), 0)
+			//destination.x = destination.y = 0
 		}
 
 		if(angle) {

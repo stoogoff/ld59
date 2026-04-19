@@ -43,12 +43,7 @@ export class GameScreen extends Screen {
 		gfx.background = cfg.colourPhase.colour.copy(0.5)
 
 		this.#camera = new Camera(new Point(0, 0), bounds, VELOCITY)
-		this.#player = new Player(
-			gfx.viewport.centroid,
-			VELOCITY,
-			this.#imageManager.getImage('player-sprites.png'),
-			this.#imageManager.getImage('lightning-sprites.png')
-		)
+		this.#player = new Player(gfx.viewport.centroid, VELOCITY, this.#imageManager)
 		this.#home = new Home(gfx.viewport.centroid)
 
 		const tokenCount = getRandomInt(10, 50)
@@ -65,8 +60,8 @@ export class GameScreen extends Screen {
 
 		// add debug enemies
 		if(cfg.debug) {
-			this.#enemies.push(new Enemy(0, 0, this.#imageManager.getImage('monster-sprites-black.png'), true))
-			this.#enemies.push(new Enemy(0, 0, this.#imageManager.getImage('monster-sprites-blue.png')))
+			//this.#enemies.push(new Enemy(0, 0, this.#imageManager.getImage('monster-sprites-black.png'), true))
+			//this.#enemies.push(new Enemy(0, 0, this.#imageManager.getImage('monster-sprites-blue.png')))
 		}
 
 		if(cfg.previousColourPhase) {

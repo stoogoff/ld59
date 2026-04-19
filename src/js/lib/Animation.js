@@ -8,15 +8,12 @@ export class Animation {
 	#frames = 1
 	#looping = true
 	#drawingRect
-	#startingFrame
 
-	constructor(bounds, frames, speed = 100, looping = true, offset = 0) {
+	constructor(bounds, frames, speed = 100, looping = true) {
 		this.#frames = frames
 		this.#animation = new Interval(speed)
 		this.#looping = looping
 		this.#drawingRect = bounds
-		this.#currentFrame = offset
-		this.#startingFrame = offset
 	}
 
 	get drawingRect() {
@@ -28,7 +25,7 @@ export class Animation {
 			++this.#currentFrame
 
 			if(this.#currentFrame >= this.#frames) {
-				this.#currentFrame = this.#looping ? this.#startingFrame : this.#frames
+				this.#currentFrame = this.#looping ? 0 : this.#frames
 			}
 
 			this.#drawingRect = new Rectangle(
