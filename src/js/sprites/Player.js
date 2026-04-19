@@ -34,13 +34,13 @@ export class Player extends Sprite {
 	}
 
 	setEnemiesAlert(alert) {
-		if(alert) {
+		/*if(alert) {
 			this.#fade = null
 			this.#fadeColour = this.#fadeColour.copy(1)
 		}
 		else if(this.#fade === null) {
 			this.#fade = new Interval(500)
-		}
+		}*/
 	}
 
 	// component methods
@@ -72,21 +72,21 @@ export class Player extends Sprite {
 			this.#pulseTargets = []
 		}
 
-		if(this.#fade) {
+		/*if(this.#fade) {
 			this.#fadeColour = this.#fadeColour.copy(1 - (this.#fade.elapsed / this.#fade.span))
 
 			if(this.#fade.next(elapsed)) {
 				this.#fade = null
 			}
-		}		
+		}*/		
 	}
 
 	render(gfx) {
 		gfx.fillCircle(this.bounds, this.#colour)
 
-		if(this.#fade) {
+		/*if(this.#fade) {
 			gfx.drawCircle(this.bounds.grow(ENEMY_AWARENESS), this.#fadeColour)
-		}
+		}*/
 
 		this.#pulseTargets.forEach((target, idx) => {
 			gfx.drawLine([this.bounds.centroid, target], idx === 0 ? 'white' : 'black')
