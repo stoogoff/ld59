@@ -1,9 +1,11 @@
 
 export class ImageManager {
+	#basePath
 	#paths = []
 	#images = {}
 
-	constructor(paths = []) {
+	constructor(basePath, paths = []) {
+		this.#basePath = basePath
 		this.#paths = paths
 	}
 
@@ -13,7 +15,7 @@ export class ImageManager {
 		this.#paths.forEach(path => {
 			const image = new Image()
 
-			image.src = path
+			image.src = this.#basePath + path
 			image.onload = () => {
 				++readyCount
 

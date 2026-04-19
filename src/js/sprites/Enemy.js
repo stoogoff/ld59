@@ -11,7 +11,8 @@ const EnemyState = {
 }
 
 const DISTANCE = 150
-const SIZE = 50
+const WIDTH = 60
+const HEIGHT = 40
 
 export class Enemy extends Sprite {
 	#colour
@@ -21,13 +22,15 @@ export class Enemy extends Sprite {
 	#target
 	#angle
 	#speed
+	#image
 
 	canDraw = true
 	canUpdate = true
 
-	constructor(x, y, colour) {
-		super(new Rectangle(x, y, SIZE, SIZE))
+	constructor(x, y, colour, image) {
+		super(new Rectangle(x, y, WIDTH, HEIGHT))
 
+		this.#image = image
 		this.#colour = colour
 		this.#borderColour = colour.adjust(0.25)
 		this.#setRandomTarget()
@@ -50,7 +53,7 @@ export class Enemy extends Sprite {
 	}
 
 	setFleeTarget(target) {
-		this.#target = new Rectangle(target.x, target.y, SIZE, SIZE)
+		this.#target = new Rectangle(target.x, target.y, WIDTH, HEIGHT)
 		this.#state = EnemyState.FLEEING
 		this.#setNewSpeed()
 		this.#stateChanger = new Interval(getRandomInt(2000, 3000))
@@ -60,8 +63,8 @@ export class Enemy extends Sprite {
 		this.#target = new Rectangle(
 			getRandomInt(this.bounds.x - DISTANCE, this.bounds.x + DISTANCE * 2),
 			getRandomInt(this.bounds.y - DISTANCE, this.bounds.y + DISTANCE * 2),
-			SIZE,
-			SIZE
+			WIDTH,
+			HEIGHT
 		)
 	}
 
@@ -105,7 +108,8 @@ export class Enemy extends Sprite {
 	}
 
 	render(gfx) {
-		gfx.fill(this.bounds, this.#colour)
+		gfx.drawImage(this.#image, this.bounds)
+		//gfx.fill(this.bounds, this.#colour)
 
 		if(this.#state === EnemyState.PURSUING) {
 			gfx.draw(this.bounds, this.#borderColour)

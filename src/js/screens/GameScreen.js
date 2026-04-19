@@ -53,15 +53,17 @@ export class GameScreen extends Screen {
 				new Token(
 					getRandomInt(bounds.x, bounds.w),
 					getRandomInt(bounds.y, bounds.h),
-					this.#imageManager.getImages('/img/token-1.png', '/img/token-2.png', '/img/token-3.png')
+					this.#imageManager.getImages('token-1.png', 'token-2.png', 'token-3.png')
 				)
 			)
 		}
 
+		const enemyImage = this.#imageManager.getImage('monster-1.png')
+
 		// add debug enemies
 		if(cfg.debug) {
-			this.#enemies.push(new Enemy(0, 0, cfg.colourPhase))
-			this.#enemies.push(new Enemy(0, 0, cfg.previousColourPhase ?? new Colour(161, 132, 35)))
+			this.#enemies.push(new Enemy(0, 0, cfg.colourPhase, enemyImage))
+			this.#enemies.push(new Enemy(0, 0, cfg.previousColourPhase ?? new Colour(161, 132, 35), enemyImage))
 		}
 
 		if(cfg.previousColourPhase) {
@@ -73,7 +75,8 @@ export class GameScreen extends Screen {
 					new Enemy(
 						getRandomInt(bounds.x, bounds.w),
 						getRandomInt(bounds.y, bounds.h),
-						cfg.colourPhase
+						cfg.colourPhase,
+						enemyImage
 					)
 				)
 			}
@@ -83,7 +86,8 @@ export class GameScreen extends Screen {
 					new Enemy(
 						getRandomInt(bounds.x, bounds.w),
 						getRandomInt(bounds.y, bounds.h),
-						cfg.previousColourPhase
+						cfg.previousColourPhase,
+						enemyImage
 					)
 				)
 			}

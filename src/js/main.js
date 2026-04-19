@@ -6,10 +6,11 @@ import { ImageManager } from '/js/helpers/ImageManager.js'
 import { Cycle } from '/js/helpers/Cycle.js'
 
 export const main = () => {
-	const imageManager = new ImageManager([
-		'/img/token-1.png',
-		'/img/token-2.png',
-		'/img/token-3.png',
+	const imageManager = new ImageManager('/img/', [
+		'token-1.png',
+		'token-2.png',
+		'token-3.png',
+		'monster-1.png',
 	])
 
 	imageManager.init(() => {
