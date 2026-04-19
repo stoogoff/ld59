@@ -32,9 +32,9 @@ export class Token extends Sprite {
 	}
 
 	setPlayerTarget(target) {
-		this.#target = target
-		this.#state = TokenState.MOVING
-		this.#stateChanger = new Interval(250)
+		//this.#target = target
+		//this.#state = TokenState.MOVING
+		//this.#stateChanger = new Interval(250)
 	}
 
 	update(elapsed, controller) {

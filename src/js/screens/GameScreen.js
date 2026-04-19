@@ -40,10 +40,15 @@ export class GameScreen extends Screen {
 
 		const bounds = new Rectangle(0, 0, gfx.width, gfx.height).grow(WORLD_SIZE)
 
-		gfx.background = cfg.colourPhase
+		gfx.background = cfg.colourPhase.colour.copy(0.5)
 
 		this.#camera = new Camera(new Point(0, 0), bounds, VELOCITY)
-		this.#player = new Player(gfx.viewport.centroid, VELOCITY)
+		this.#player = new Player(
+			gfx.viewport.centroid,
+			VELOCITY,
+			this.#imageManager.getImage('player-sprites.png'),
+			this.#imageManager.getImage('lightning-sprites.png')
+		)
 		this.#home = new Home(gfx.viewport.centroid)
 
 		const tokenCount = getRandomInt(10, 50)
@@ -58,15 +63,16 @@ export class GameScreen extends Screen {
 			)
 		}
 
-		const enemyImage = this.#imageManager.getImage('monster-1.png')
-
 		// add debug enemies
 		if(cfg.debug) {
-			this.#enemies.push(new Enemy(0, 0, cfg.colourPhase, enemyImage))
-			this.#enemies.push(new Enemy(0, 0, cfg.previousColourPhase ?? new Colour(161, 132, 35), enemyImage))
+			this.#enemies.push(new Enemy(0, 0, this.#imageManager.getImage('monster-sprites-black.png'), true))
+			this.#enemies.push(new Enemy(0, 0, this.#imageManager.getImage('monster-sprites-blue.png')))
 		}
 
 		if(cfg.previousColourPhase) {
+			const visibleEnemy = this.#imageManager.getImage(cfg.previousColourPhase.enemyImage)
+			const hiddenEnemy = this.#imageManager.getImage('monster-sprites-black.png')
+
 			const visibleEnemyCount = getRandomInt(5, 10)
 			const hiddenEnemyCount = getRandomInt(1, 5)
 
@@ -75,8 +81,8 @@ export class GameScreen extends Screen {
 					new Enemy(
 						getRandomInt(bounds.x, bounds.w),
 						getRandomInt(bounds.y, bounds.h),
-						cfg.colourPhase,
-						enemyImage
+						hiddenEnemy,
+						true
 					)
 				)
 			}
@@ -86,8 +92,7 @@ export class GameScreen extends Screen {
 					new Enemy(
 						getRandomInt(bounds.x, bounds.w),
 						getRandomInt(bounds.y, bounds.h),
-						cfg.previousColourPhase,
-						enemyImage
+						visibleEnemy
 					)
 				)
 			}

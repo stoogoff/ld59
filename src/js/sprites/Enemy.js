@@ -1,5 +1,5 @@
 
-import { Interval, Rectangle, Sprite } from '/js/lib/index.js'
+import { Animation, Interval, Rectangle, Sprite } from '/js/lib/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
 export const ENEMY_AWARENESS = 250
@@ -15,26 +15,27 @@ const WIDTH = 60
 const HEIGHT = 40
 
 export class Enemy extends Sprite {
-	#colour
-	#borderColour
 	#state = EnemyState.IDLE
 	#stateChanger = null
 	#target
 	#angle
 	#speed
 	#image
+	#animation
+	#isHidden
 
 	canDraw = true
 	canUpdate = true
 
-	constructor(x, y, colour, image) {
+	constructor(x, y, image, isHidden = false) {
 		super(new Rectangle(x, y, WIDTH, HEIGHT))
 
 		this.#image = image
-		this.#colour = colour
-		this.#borderColour = colour.adjust(0.25)
 		this.#setRandomTarget()
 		this.#setNewSpeed()
+
+		this.#isHidden = isHidden
+		this.#animation = new Animation(new Rectangle(0, 0, WIDTH, HEIGHT), 8, 300)
 	}
 
 	get target() {
@@ -97,22 +98,26 @@ export class Enemy extends Sprite {
 		}
 
 		if(this.#stateChanger !== null) {
-			this.#borderColour = this.#borderColour.copy(1 - (this.#stateChanger.elapsed / this.#stateChanger.span))
-
 			if(this.#stateChanger.next(elapsed)) {
 				this.#state = EnemyState.IDLE
 				this.#setNewSpeed()
 				this.#setRandomTarget()
 			}
 		}
+
+		this.#animation.update(elapsed)
 	}
 
 	render(gfx) {
-		gfx.drawImage(this.#image, this.bounds)
+		//gfx.drawImage(this.#image, this.bounds)
 		//gfx.fill(this.bounds, this.#colour)
+		if(!this.#isHidden) {
+			gfx.drawSprite(this.#image, this.#animation.drawingRect, this.bounds, false, false)
+		}
 
-		if(this.#state === EnemyState.PURSUING) {
-			gfx.draw(this.bounds, this.#borderColour)
+		if(this.#isHidden && this.#state === EnemyState.PURSUING) {
+			gfx.drawSprite(this.#image, this.#animation.drawingRect, this.bounds, false, false)
+			//gfx.draw(this.bounds, 'black')
 		}
 
 		// debug show target but maybe leave it in and draw something better

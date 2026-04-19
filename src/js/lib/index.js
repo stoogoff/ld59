@@ -1,4 +1,5 @@
 
+export * from './Animation.js'
 export * from './Atlas.js'
 export * from './Camera.js'
 export * from './Colour.js'

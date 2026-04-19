@@ -1,4 +1,5 @@
 
+import { Point } from './Point.js'
 import { Rectangle } from './Rectangle.js'
 
 export class Graphics {

@@ -7,10 +7,15 @@ import { Cycle } from '/js/helpers/Cycle.js'
 
 export const main = () => {
 	const imageManager = new ImageManager('/img/', [
+		'lightning-sprites.png',
+		'monster-sprites-black.png',
+		'monster-sprites-blue.png',
+		'monster-sprites-green.png',
+		'monster-sprites-red.png',
+		'player-sprites.png',
 		'token-1.png',
 		'token-2.png',
 		'token-3.png',
-		'monster-1.png',
 	])
 
 	imageManager.init(() => {
@@ -20,9 +25,18 @@ export const main = () => {
 	const controller = new Controller()
 	const gfx = new Graphics('canvas')
 	const colourPhases = new Cycle([
-		new Colour(44, 122, 36),
-		new Colour(235, 72, 121),
-		new Colour(50, 85, 209),
+		{
+			colour: new Colour(44, 122, 36),
+			enemyImage: 'monster-sprites-green.png',
+		},
+		{
+			colour: new Colour(235, 72, 121),
+			enemyImage: 'monster-sprites-red.png',
+		},
+		{
+			colour: new Colour(50, 85, 209),
+			enemyImage: 'monster-sprites-blue.png',
+		},
 	])
 
 	const transitionManager = config => {
@@ -57,7 +71,7 @@ export const main = () => {
 		colourPhase: colourPhases.next(),
 		previousColourPhase: null,
 		countdown: 10000, // should be short for first run through
-		debug: false,
+		debug: true,
 	})
 
 	// DEBUG

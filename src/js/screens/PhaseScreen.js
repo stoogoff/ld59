@@ -11,7 +11,7 @@ export class PhaseScreen extends Screen {
 
 		const bounds = new Rectangle(0, 0, gfx.width, gfx.height)
 		
-		this.#fade = new Fade(bounds, cfg.colourPhase)
+		this.#fade = new Fade(bounds, cfg.colourPhase.colour)
 		this.components.push(this.#fade)
 	}
 
