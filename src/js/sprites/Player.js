@@ -107,24 +107,24 @@ export class Player extends Sprite {
 		this.#animationWalking.update(elapsed)
 		this.#animationIdle.update(elapsed)
 
-		/*if(this.#fade) {
+		if(this.#fade) {
 			this.#fadeColour = this.#fadeColour.copy(1 - (this.#fade.elapsed / this.#fade.span))
 
 			if(this.#fade.next(elapsed)) {
 				this.#fade = null
 			}
-		}*/		
+		}
 	}
 
 	render(gfx) {
 		//gfx.fillCircle(this.bounds, this.#colour)
 
-		/*if(this.#fade) {
+		if(this.#fade) {
 			gfx.drawCircle(this.bounds.grow(ENEMY_AWARENESS), this.#fadeColour)
-		}*/
+		}
 
 		this.#pulseTargets.forEach((target, idx) => {
-			gfx.drawSprite(this.#imagePulse, this.#animationPulse.drawingRect, new Rectangle(this.bounds.centroid.x, this.bounds.centroid.y, 200, 10), false, false)
+			//gfx.drawSprite(this.#imagePulse, this.#animationPulse.drawingRect, new Rectangle(this.bounds.centroid.x, this.bounds.centroid.y, 200, 10), false, false)
 			gfx.drawLine([this.bounds.centroid, target], idx === 0 ? 'white' : 'black')
 
 			/*const distance = target.distance(this.bounds.centroid)

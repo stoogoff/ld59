@@ -6,6 +6,11 @@ import { ImageManager } from '/js/helpers/ImageManager.js'
 import { Cycle } from '/js/helpers/Cycle.js'
 
 export const main = () => {
+	const audio = new Audio('/audio/theme.mp3')
+
+	audio.loop = true
+	audio.autoplay = true
+
 	const imageManager = new ImageManager('/img/', [
 		'lightning-sprites.png',
 		'monster-sprites-black.png',
@@ -68,23 +73,6 @@ export const main = () => {
 
 	let currentScreen = new GameScreen(transitionManager, imageManager)
 
-	currentScreen.init(gfx, {
-		currentScore: 0,
-		colourPhase: colourPhases.next(),
-		previousColourPhase: null,
-		countdown: 10000, // should be short for first run through
-		debug: true,
-	})
-
-	// DEBUG
-	/*currentScreen.init(gfx, {
-		currentScore: 0,
-		colourPhase: colourPhases.next(),
-		previousColourPhase: colourPhases.current,//null,
-		countdown: 60000, // should be short for first run through
-		debug: true,
-	})*/
-
 	// set up the game loop which will update the screen then render it
 	const gameLoop = new Timer((time) => {
 		if(!currentScreen) {
@@ -105,11 +93,39 @@ export const main = () => {
 		if(controller.isKeyPressed(Keys.PAUSE)) {
 			pauseScreen.toggle()
 		}
+
+		if(controller.isKeyPressed(Keys.AUDIO)) {
+			if(audio.paused) {
+				audio.play()
+			}
+			else {
+				audio.pause()
+			}
+		}
 	})
 	document.addEventListener('keyup', (evt) => {
 		controller.releaseKey(evt.keyCode)
 	})
 
-	// after everything is set up start
-	gameLoop.start()
+	document.addEventListener('click', (evt) => {
+		currentScreen.init(gfx, {
+			currentScore: 0,
+			colourPhase: colourPhases.next(),
+			previousColourPhase: null,
+			countdown: 10000, // should be short for first run through
+			debug: true,
+		})
+
+		// DEBUG
+		/*currentScreen.init(gfx, {
+			currentScore: 0,
+			colourPhase: colourPhases.next(),
+			previousColourPhase: colourPhases.current,//null,
+			countdown: 60000, // should be short for first run through
+			debug: true,
+		})*/
+		document.getElementById('start').classList.add('hidden')
+
+		gameLoop.start()
+	})
 }

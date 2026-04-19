@@ -1,4 +1,6 @@
 
+@import url(https://fonts.bunny.net/css?family=actor:400|geostar-fill:400);
+
 /* make canvas fit the screen */
 html, body, canvas {
 	display: block;
@@ -12,6 +14,12 @@ html, body, canvas {
 body {
 	background-image: url(/img/background.png);
 	background-repeat: repeat;
+	font-family: 'Actor', sans-serif;
+	line-height: 1.5rem;
+}
+
+h1 {
+	font-family: 'Geostar Fill', display;
 }
 
 .hidden {
@@ -23,18 +31,19 @@ body {
 	position: absolute;
 	top: 5px;
 	left: 5px;
+	border: 1px solid black;
 	color: white;
+	padding: 0.1rem 0.3rem;
+	border-radius: 0.3rem;
+	background-color: rgb(55,55,55);
 	font-weight: bold;
-	background-color: red;
-	padding: 2px;
 	font-size: 20px;
 	width: 120px;
-	border: 1px solid black;	
 	z-index: 50;
 }
 
-/* Pause screen */
-#pause {
+/* Pause / Start screen */
+.screen {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -44,10 +53,30 @@ body {
 	z-index: 100;
 	padding: 150px 200px 0;
 
-	div {
-		background-color: rgb(200,200,200);
+	div.panel {
+		background-image: url(/img/background.png);
+		background-repeat: repeat;
 		border: 1px solid black;
+		border-radius: 1rem;
+		overflow: hidden;
+	}
+
+	div.container {
+		background-color: rgba(255,255,255,0.5);
 		padding: 20px;
 		text-align: center;
 	}
+}
+
+code {
+	display: inline-block;
+	border: 1px solid black;
+	color: white;
+	padding: 0.1rem 0.3rem;
+	border-radius: 0.3rem;
+	background-color: rgb(55,55,55);
+}
+
+h2 {
+	color: red;
 }

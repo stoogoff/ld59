@@ -9,17 +9,36 @@
 <body>
 
 <!-- hud -->
-<div id="hud">
+<div id="hud" class="hidden">
 	<div id="tokens"></div>
 	<div id="timer"></div>
 	<div id="score"></div>
 </div>
 
 <!-- pause screen -->
-<div id="pause" class="hidden">
-	<div>
-		<h1>PAUSED</h1>
-		<p>Press <code>P</code> to restart.</p>
+<div id="pause" class="screen hidden">
+	<div class="panel">
+		<div class="container">
+			<h1>PAUSED</h1>
+			<p>Press <code>P</code> to restart.</p>
+			<p>Use <code>cursor</code> keys to move, <code>spacebar</code> to send out a signal.</p>
+			<p><code>M</code> to play / mute music.</p>
+		</div>
+	</div>
+</div>
+
+<!-- pause screen -->
+<div id="start" class="screen">
+	<div class="panel">
+		<div class="container">
+			<h1>SIGNAL</h1>
+			<p>Use <code>cursor</code> keys to move, <code>spacebar</code> to send out a signal.</p>
+			<p>Collect as many tokens as you can and return to your base before the time is up. Send out a signal to find tokens and your home.</p>
+			<h2>WARNING!</h2>
+			<p>Sending a signal may attract monsters. Avoid at all costs!</p>
+			<p>Watch out for the changes to the world and invisible enemies.</p>
+			<p>Click anywhere to start. <code>M</code> to play / mute music.</p>
+		</div>
 	</div>
 </div>
 
