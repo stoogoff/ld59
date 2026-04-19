@@ -1,6 +1,6 @@
 
-import { Colour, Rectangle, Screen } from '/js/lib/index.js'
-import { Fade } from '/js/sprites/index.js'
+import { Colour, Rectangle, Screen } from '../lib/index.js'
+import { Fade } from '../sprites/index.js'
 
 export class PhaseScreen extends Screen {
 	#fade

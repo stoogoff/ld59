@@ -1,17 +1,17 @@
 
-import { Colour, Controller, Keys, Graphics, Timer } from '/js/lib/index.js'
-import { getRandomInt } from '/js/lib/utils.js'
-import { GameScreen, PauseScreen, PhaseScreen } from '/js/screens/index.js'
-import { ImageManager } from '/js/helpers/ImageManager.js'
-import { Cycle } from '/js/helpers/Cycle.js'
+import { Colour, Controller, Keys, Graphics, Timer } from './lib/index.js'
+import { getRandomInt } from './lib/utils.js'
+import { GameScreen, PauseScreen, PhaseScreen } from './screens/index.js'
+import { ImageManager } from './helpers/ImageManager.js'
+import { Cycle } from './helpers/Cycle.js'
 
 export const main = () => {
-	const audio = new Audio('/audio/theme.mp3')
+	const audio = new Audio('https://games.stoogoff.com/ld59/audio/theme.mp3')
 
 	audio.loop = true
 	audio.autoplay = true
 
-	const imageManager = new ImageManager('/img/', [
+	const imageManager = new ImageManager('img/', [
 		'lightning-sprites.png',
 		'monster-sprites-black.png',
 		'monster-sprites-blue.png',

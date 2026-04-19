@@ -1,6 +1,6 @@
 
-import { Colour, Interval, Point, Rectangle, Sprite } from '/js/lib/index.js'
-import { getRandomInt } from '/js/lib/utils.js'
+import { Colour, Interval, Point, Rectangle, Sprite } from '../lib/index.js'
+import { getRandomInt } from '../lib/utils.js'
 
 export class Home extends Sprite {
 	#colour = new Colour(118, 240, 42, 1)

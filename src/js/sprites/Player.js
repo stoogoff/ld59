@@ -1,5 +1,5 @@
 
-import { Animation, Colour, Interval, Keys, Rectangle, Sprite } from '/js/lib/index.js'
+import { Animation, Colour, Interval, Keys, Rectangle, Sprite } from '../lib/index.js'
 import { ENEMY_AWARENESS } from './Enemy.js'
 
 const WIDTH = 30

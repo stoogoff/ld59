@@ -1,5 +1,5 @@
 
-import { Colour } from '/js/lib/index.js'
+import { Colour } from '../lib/index.js'
 
 export class Fade {
 	#bounds

@@ -1,7 +1,7 @@
 
-import { Camera, Colour, Point, Rectangle, Screen } from '/js/lib/index.js'
-import { Enemy, Home, Player, Token, ENEMY_AWARENESS } from '/js/sprites/index.js'
-import { getRandomInt } from '/js/lib/utils.js'
+import { Camera, Colour, Point, Rectangle, Screen } from '../lib/index.js'
+import { Enemy, Home, Player, Token, ENEMY_AWARENESS } from '../sprites/index.js'
+import { getRandomInt } from '../lib/utils.js'
 
 const VELOCITY = 10
 const TOKEN_SCORE = 5

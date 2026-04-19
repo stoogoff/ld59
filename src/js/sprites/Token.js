@@ -1,7 +1,7 @@
 
-import { Colour, Interval, Rectangle, Sprite } from '/js/lib/index.js'
-import { getRandomInt } from '/js/lib/utils.js'
-import { Cycle } from '/js/helpers/Cycle.js'
+import { Colour, Interval, Rectangle, Sprite } from '../lib/index.js'
+import { getRandomInt } from '../lib/utils.js'
+import { Cycle } from '../helpers/Cycle.js'
 
 const TokenState = {
 	IDLE: 0,

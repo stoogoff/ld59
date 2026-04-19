@@ -1,6 +1,6 @@
 
-import { Animation, Interval, Rectangle, Sprite } from '/js/lib/index.js'
-import { getRandomInt } from '/js/lib/utils.js'
+import { Animation, Interval, Rectangle, Sprite } from '../lib/index.js'
+import { getRandomInt } from '../lib/utils.js'
 
 export const ENEMY_AWARENESS = 250
 
