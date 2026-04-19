@@ -1,5 +1,6 @@
 
 import { Colour, Interval, Keys, Rectangle, Sprite } from '/js/lib/index.js'
+import { ENEMY_AWARENESS } from './Enemy.js'
 
 export class Player extends Sprite {
 	#speed = 0
@@ -60,6 +61,7 @@ export class Player extends Sprite {
 
 	render(gfx) {
 		gfx.fillCircle(this.bounds, this.#colour)
+		//gfx.drawCircle(this.bounds.grow(ENEMY_AWARENESS), 'white')
 
 		this.#pulseTargets.forEach(target => {
 			gfx.drawLine([this.bounds.centroid, target], 'black')

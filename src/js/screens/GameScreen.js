@@ -1,10 +1,11 @@
 
 import { Camera, Point, Rectangle, Screen } from '/js/lib/index.js'
-import { Enemy, Home, Player, Token } from '/js/sprites/index.js'
+import { Enemy, Home, Player, Token, ENEMY_AWARENESS } from '/js/sprites/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
 const VELOCITY = 10
 const TOKEN_SCORE = 5
+const WORLD_SIZE = 600
 
 export class GameScreen extends Screen {
 	#home
@@ -30,8 +31,7 @@ export class GameScreen extends Screen {
 
 		this.showHUD()
 
-		const size = 1000
-		const bounds = new Rectangle(-size, -size, gfx.width + size * 2, gfx.height + size * 2)
+		const bounds = new Rectangle(0, 0, gfx.width, gfx.height).grow(WORLD_SIZE)
 
 		gfx.background = cfg.colourPhase
 
@@ -45,19 +45,15 @@ export class GameScreen extends Screen {
 			this.#tokens.push(new Token(getRandomInt(bounds.x, bounds.w), getRandomInt(bounds.y, bounds.h)))
 		}
 
+		// add debug enemies
+		if(cfg.debug) {
+			this.#enemies.push(new Enemy(0, 0, cfg.colourPhase))
+			this.#enemies.push(new Enemy(0, 0, cfg.previousColourPhase ?? 'orange'))
+		}
+
 		if(cfg.previousColourPhase) {
 			const visibleEnemyCount = getRandomInt(5, 10)
 			const hiddenEnemyCount = getRandomInt(1, 5)
-
-			/*for(let i = 0; i < visibleEnemyCount; i++) {
-				this.#enemies.push(
-					new Enemy(
-						getRandomInt(bounds.x, bounds.w),
-						getRandomInt(bounds.y, bounds.h),
-						cfg.previousColourPhase
-					)
-				)
-			}
 
 			for(let i = 0; i < hiddenEnemyCount; i++) {
 				this.#enemies.push(
@@ -67,15 +63,17 @@ export class GameScreen extends Screen {
 						cfg.colourPhase
 					)
 				)
-			}*/
+			}
 
-			this.#enemies.push(
+			for(let i = 0; i < visibleEnemyCount; i++) {
+				this.#enemies.push(
 					new Enemy(
-						0,
-						0,
+						getRandomInt(bounds.x, bounds.w),
+						getRandomInt(bounds.y, bounds.h),
 						cfg.previousColourPhase
 					)
 				)
+			}
 		}
 
 		this.addComponents([
@@ -102,7 +100,11 @@ export class GameScreen extends Screen {
 
 		// the player has sent out a signal attracting all enemies
 		if(this.#player.isPulsing) {
-			this.#enemies.forEach(enemy => enemy.setPlayerTarget(this.#player.bounds))
+			this.#enemies.forEach(enemy => {
+				if(enemy.isFleeing) return
+
+				enemy.setPlayerTarget(this.#player.bounds)
+			})
 
 			const closest = this.#tokens
 				.filter(token => token.canDraw)
@@ -119,8 +121,6 @@ export class GameScreen extends Screen {
 			])
 		}
 
-		// TODO enemies which are close to the play should target it, not just during pulse
-
 		let playerIsHome = false
 
 		// player in home space
@@ -134,14 +134,23 @@ export class GameScreen extends Screen {
 		this.#home.playerIsHome(playerIsHome)
 		this.#countdown -= time
 
-		// player is safe in home space, otherwise collision enemies
 		let isHit = false
 
+		// player is safe in home space, otherwise collision enemies
+		// and attract close enemies
 		if(!playerIsHome) {
 			for(let i = 0; i < this.#enemies.length; i++) {
-				if(this.#player.collision(this.#enemies[i].bounds)) {
+				const enemy = this.#enemies[i]
+
+				if(this.#player.collision(enemy.bounds)) {
 					isHit = true
 					break
+				}
+
+				const distance = this.#player.bounds.centroid.distance(enemy.bounds.centroid)
+
+				if(distance < ENEMY_AWARENESS && !enemy.isFleeing) {
+					enemy.setPlayerTarget(this.#player.bounds)
 				}
 			}
 		}

@@ -40,20 +40,22 @@ export const main = () => {
 
 	let currentScreen = new GameScreen(transitionManager)
 
-	/*currentScreen.init(gfx, {
+	currentScreen.init(gfx, {
 		currentScore: 0,
 		colourPhase: colourPhases.next(),
 		previousColourPhase: null,
 		countdown: 10000, // should be short for first run through
-	})*/
+		debug: false,
+	})
 
 	// DEBUG
-	currentScreen.init(gfx, {
+	/*currentScreen.init(gfx, {
 		currentScore: 0,
 		colourPhase: colourPhases.next(),
 		previousColourPhase: colourPhases.current,//null,
 		countdown: 60000, // should be short for first run through
-	})
+		debug: true,
+	})*/
 
 	// set up the game loop which will update the screen then render it
 	const gameLoop = new Timer((time) => {

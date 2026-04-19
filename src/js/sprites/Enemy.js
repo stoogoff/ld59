@@ -2,6 +2,8 @@
 import { Interval, Rectangle, Sprite } from '/js/lib/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
+export const ENEMY_AWARENESS = 250
+
 const EnemyState = {
 	IDLE: 0,
 	PURSUING: 1,
@@ -44,7 +46,7 @@ export class Enemy extends Sprite {
 		this.#target = target
 		this.#state = EnemyState.PURSUING
 		this.#setNewSpeed()
-		this.#stateChanger = new Interval(getRandomInt(500, 2000))
+		this.#stateChanger = new Interval(getRandomInt(500, 1500))
 	}
 
 	setFleeTarget(target) {
@@ -89,7 +91,6 @@ export class Enemy extends Sprite {
 		}
 		else {
 			this.#setRandomTarget()
-			this.#setNewSpeed()
 		}
 
 		if(this.#stateChanger !== null) {
@@ -111,7 +112,7 @@ export class Enemy extends Sprite {
 		}
 
 		// debug show target but maybe leave it in and draw something better
-		gfx.fillCircle(new Rectangle(this.#target.centroid.x, this.#target.centroid.y, 10, 10), 'black')
-		gfx.drawLine([this.bounds.centroid, this.#target.centroid], 'white')
+		//gfx.fillCircle(new Rectangle(this.#target.centroid.x, this.#target.centroid.y, 10, 10), 'black')
+		//gfx.drawLine([this.bounds.centroid, this.#target.centroid], 'white')
 	}
 }
