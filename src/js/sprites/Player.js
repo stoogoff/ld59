@@ -124,10 +124,10 @@ export class Player extends Sprite {
 		}*/
 
 		this.#pulseTargets.forEach((target, idx) => {
-			//gfx.drawSprite(this.#imagePulse, this.#animationPulse.drawingRect, new Rectangle(this.bounds.centroid.x, this.bounds.centroid.y, 200, 10), false, false)
-			//gfx.drawLine([this.bounds.centroid, target], idx === 0 ? 'white' : 'black')
+			gfx.drawSprite(this.#imagePulse, this.#animationPulse.drawingRect, new Rectangle(this.bounds.centroid.x, this.bounds.centroid.y, 200, 10), false, false)
+			gfx.drawLine([this.bounds.centroid, target], idx === 0 ? 'white' : 'black')
 
-			const distance = target.distance(this.bounds.centroid)
+			/*const distance = target.distance(this.bounds.centroid)
 			const delta = target.subtract(this.bounds.centroid)
 			const angle = Math.atan2(delta.y, delta.x)
 
@@ -147,20 +147,19 @@ export class Player extends Sprite {
 				0,
 				-distance,
 				10
-			)*/
-
+			)*
 			gfx.context.drawImage(
 				this.#imagePulse,
 				this.#animationPulse.drawingRect.x,
 				this.#animationPulse.drawingRect.y,
 				this.#animationPulse.drawingRect.w,
 				this.#animationPulse.drawingRect.h,
-				-this.#animationPulse.drawingRect.h / 2,
-				-distance,
+				-this.#animationPulse.drawingRect.w / 2,
+				-this.#animationPulse.drawingRect.h,
+				this.#animationPulse.drawingRect.w,
 				this.#animationPulse.drawingRect.h,
-				distance,
 			)
-			gfx.context.restore()
+			gfx.context.restore()*/
 /*
 const drawStretchedImage = (
 	ctx: CanvasRenderingContext2D,
