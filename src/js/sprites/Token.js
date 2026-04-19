@@ -1,10 +1,14 @@
 
 import { Colour, Interval, Rectangle, Sprite } from '/js/lib/index.js'
+import { getRandomInt } from '/js/lib/utils.js'
+import { Cycle } from '/js/helpers/Cycle.js'
 
 const TokenState = {
 	IDLE: 0,
 	MOVING: 1,
 }
+
+const SIZE = 32
 
 export class Token extends Sprite {
 	#colour
@@ -12,23 +16,33 @@ export class Token extends Sprite {
 	#target
 	#stateChanger
 	#speed = 3
+	#images = []
+	#image
+	#imageChanger = null
 
 	canDraw = true
-	canUpdate = false
+	canUpdate = true
 
-	constructor(x, y) {
-		super(new Rectangle(x, y, 20, 20))
+	constructor(x, y, images) {
+		super(new Rectangle(x, y, SIZE, SIZE))
 		this.#colour = new Colour(232, 222, 19)
+		this.#images = new Cycle([...images, ...images.toReversed()])
+		this.#image = this.#images.current
+		this.#imageChanger = new Interval(getRandomInt(100, 500))
 	}
 
 	setPlayerTarget(target) {
-		this.canUpdate = true
 		this.#target = target
 		this.#state = TokenState.MOVING
 		this.#stateChanger = new Interval(250)
 	}
 
 	update(elapsed, controller) {
+		if(this.#imageChanger.next(elapsed)) {
+			this.#image = this.#images.next()
+			this.#imageChanger = new Interval(getRandomInt(100, 500))
+		}
+
 		if(this.#state === TokenState.IDLE) return
 
 		const distance = this.#target.centroid.distance(this.bounds.centroid)
@@ -44,11 +58,11 @@ export class Token extends Sprite {
 		if(this.#stateChanger !== null && this.#stateChanger.next(elapsed)) {
 			this.#state = TokenState.IDLE
 			this.#target = null
-			this.canUpdate = false
 		}
 	}
 
 	render(gfx) {
-		gfx.fillCircle(this.bounds, this.#colour)
+		//gfx.fillCircle(this.bounds, this.#colour)
+		gfx.drawImage(this.#image, this.bounds)
 	}
 }

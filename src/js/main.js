@@ -2,9 +2,20 @@
 import { Colour, Controller, Keys, Graphics, Timer } from '/js/lib/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 import { GameScreen, PauseScreen, PhaseScreen } from '/js/screens/index.js'
+import { ImageManager } from '/js/helpers/ImageManager.js'
 import { Cycle } from '/js/helpers/Cycle.js'
 
 export const main = () => {
+	const imageManager = new ImageManager([
+		'/img/token-1.png',
+		'/img/token-2.png',
+		'/img/token-3.png',
+	])
+
+	imageManager.init(() => {
+		console.log('Ready')
+	})
+
 	const controller = new Controller()
 	const gfx = new Graphics('canvas')
 	const colourPhases = new Cycle([
@@ -18,7 +29,7 @@ export const main = () => {
 
 		const nextScreen = currentScreen instanceof GameScreen
 			? new PhaseScreen(transitionManager)
-			: new GameScreen(transitionManager)
+			: new GameScreen(transitionManager, imageManager)
 
 		// keep the last colour phase as enemies will be that 
 		config.previousColourPhase = colourPhases.current
@@ -38,7 +49,7 @@ export const main = () => {
 		gameLoop.start()
 	}
 
-	let currentScreen = new GameScreen(transitionManager)
+	let currentScreen = new GameScreen(transitionManager, imageManager)
 
 	currentScreen.init(gfx, {
 		currentScore: 0,

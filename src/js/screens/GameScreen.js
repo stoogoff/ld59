@@ -20,6 +20,13 @@ export class GameScreen extends Screen {
 	#nodeScore
 	#nodeTimer
 	#nodeTokens
+	#imageManager
+
+	constructor(onComplete, imageManager) {
+		super(onComplete, [])
+
+		this.#imageManager = imageManager
+	}
 
 	init(gfx, cfg) {
 		this.#score = cfg.currentScore
@@ -42,7 +49,13 @@ export class GameScreen extends Screen {
 		const tokenCount = getRandomInt(10, 50)
 
 		for(let i = 0; i < tokenCount; i++) {
-			this.#tokens.push(new Token(getRandomInt(bounds.x, bounds.w), getRandomInt(bounds.y, bounds.h)))
+			this.#tokens.push(
+				new Token(
+					getRandomInt(bounds.x, bounds.w),
+					getRandomInt(bounds.y, bounds.h),
+					this.#imageManager.getImages('/img/token-1.png', '/img/token-2.png', '/img/token-3.png')
+				)
+			)
 		}
 
 		// add debug enemies
