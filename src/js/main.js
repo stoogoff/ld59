@@ -45,7 +45,7 @@ export const main = () => {
 		colourPhase: colourPhases.next(),
 		previousColourPhase: null,
 		countdown: 10000, // should be short for first run through
-		debug: false,
+		debug: true,
 	})
 
 	// DEBUG

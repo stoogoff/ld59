@@ -7,6 +7,10 @@ export class Player extends Sprite {
 	#colour
 	#pulse = null
 	#pulseTargets = []
+	#enemiesAlert = false
+
+	#fade = null
+	#fadeColour = new Colour(200, 200, 200)
 
 	canUpdate = true
 	canDraw = true
@@ -29,10 +33,20 @@ export class Player extends Sprite {
 		this.#pulseTargets = points
 	}
 
+	setEnemiesAlert(alert) {
+		if(alert) {
+			this.#fade = null
+			this.#fadeColour = this.#fadeColour.copy(1)
+		}
+		else if(this.#fade === null) {
+			this.#fade = new Interval(500)
+		}
+	}
+
 	// component methods
 
 	// TODO make player movement feel more natural
-	update(time, controller) {
+	update(elapsed, controller) {
 		if(controller.isKeyPressed(Keys.LEFT)) {
 			this.bounds.x -= this.#speed
 		}
@@ -53,18 +67,29 @@ export class Player extends Sprite {
 			this.#pulse = new Interval(1000)
 		}
 
-		if(this.#pulse && this.#pulse.next(time)) {
+		if(this.#pulse && this.#pulse.next(elapsed)) {
 			this.#pulse = null
 			this.#pulseTargets = []
 		}
+
+		if(this.#fade) {
+			this.#fadeColour = this.#fadeColour.copy(1 - (this.#fade.elapsed / this.#fade.span))
+
+			if(this.#fade.next(elapsed)) {
+				this.#fade = null
+			}
+		}		
 	}
 
 	render(gfx) {
 		gfx.fillCircle(this.bounds, this.#colour)
-		//gfx.drawCircle(this.bounds.grow(ENEMY_AWARENESS), 'white')
 
-		this.#pulseTargets.forEach(target => {
-			gfx.drawLine([this.bounds.centroid, target], 'black')
+		if(this.#fade) {
+			gfx.drawCircle(this.bounds.grow(ENEMY_AWARENESS), this.#fadeColour)
+		}
+
+		this.#pulseTargets.forEach((target, idx) => {
+			gfx.drawLine([this.bounds.centroid, target], idx === 0 ? 'white' : 'black')
 		})
 	}
 }

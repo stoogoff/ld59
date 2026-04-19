@@ -1,5 +1,5 @@
 
-import { Camera, Point, Rectangle, Screen } from '/js/lib/index.js'
+import { Camera, Colour, Point, Rectangle, Screen } from '/js/lib/index.js'
 import { Enemy, Home, Player, Token, ENEMY_AWARENESS } from '/js/sprites/index.js'
 import { getRandomInt } from '/js/lib/utils.js'
 
@@ -48,7 +48,7 @@ export class GameScreen extends Screen {
 		// add debug enemies
 		if(cfg.debug) {
 			this.#enemies.push(new Enemy(0, 0, cfg.colourPhase))
-			this.#enemies.push(new Enemy(0, 0, cfg.previousColourPhase ?? 'orange'))
+			this.#enemies.push(new Enemy(0, 0, cfg.previousColourPhase ?? new Colour(161, 132, 35)))
 		}
 
 		if(cfg.previousColourPhase) {
@@ -114,10 +114,13 @@ export class GameScreen extends Screen {
 
 					return a === b ? 0 : (a < b ? -1 : 1)
 				})
+				.slice(0, 2)
+
+			closest.forEach(token => token.setPlayerTarget(this.#player.bounds))
 
 			this.#player.setPulseTargets([
 				this.#home.bounds.centroid,
-				...closest.slice(0, 2).map(token => token.bounds.centroid)
+				...closest.map(token => token.bounds.centroid)
 			])
 		}
 
@@ -139,6 +142,8 @@ export class GameScreen extends Screen {
 		// player is safe in home space, otherwise collision enemies
 		// and attract close enemies
 		if(!playerIsHome) {
+			let alertCount = 0
+
 			for(let i = 0; i < this.#enemies.length; i++) {
 				const enemy = this.#enemies[i]
 
@@ -151,8 +156,11 @@ export class GameScreen extends Screen {
 
 				if(distance < ENEMY_AWARENESS && !enemy.isFleeing) {
 					enemy.setPlayerTarget(this.#player.bounds)
+					++alertCount
 				}
 			}
+
+			this.#player.setEnemiesAlert(alertCount > 0)
 		}
 
 		// repulse enemies from home space
