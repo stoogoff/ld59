@@ -1,5 +1,6 @@
 
 import { Animation, Colour, Interval, Keys, Rectangle, Sprite } from '../lib/index.js'
+import { clamp } from '../lib/utils.js'
 import { ENEMY_AWARENESS } from './Enemy.js'
 
 const WIDTH = 30
@@ -124,66 +125,25 @@ export class Player extends Sprite {
 		}
 
 		this.#pulseTargets.forEach((target, idx) => {
-			//gfx.drawSprite(this.#imagePulse, this.#animationPulse.drawingRect, new Rectangle(this.bounds.centroid.x, this.bounds.centroid.y, 200, 10), false, false)
-			gfx.drawLine([this.bounds.centroid, target], idx === 0 ? 'white' : 'black')
-
-			/*const distance = target.distance(this.bounds.centroid)
+			const distance = target.distance(this.bounds.centroid)
 			const delta = target.subtract(this.bounds.centroid)
 			const angle = Math.atan2(delta.y, delta.x)
 
-			//gfx.drawImage()
-			console.log(distance)
-
 			gfx.context.save()
 			gfx.context.translate(this.bounds.centroid.x, this.bounds.centroid.y)
-			gfx.context.rotate(angle + Math.PI / 2)
-			/*gfx.context.drawImage(
-				this.#imagePulse,
-				this.#animationPulse.drawingRect.x,
-				this.#animationPulse.drawingRect.y,
-				this.#animationPulse.drawingRect.w,
-				this.#animationPulse.drawingRect.h,
-				0,
-				0,
-				-distance,
-				10
-			)*
+			gfx.context.rotate(angle)
 			gfx.context.drawImage(
 				this.#imagePulse,
 				this.#animationPulse.drawingRect.x,
 				this.#animationPulse.drawingRect.y,
 				this.#animationPulse.drawingRect.w,
 				this.#animationPulse.drawingRect.h,
-				-this.#animationPulse.drawingRect.w / 2,
-				-this.#animationPulse.drawingRect.h,
-				this.#animationPulse.drawingRect.w,
+				0,
+				-this.#animationPulse.drawingRect.h / 2,
+				clamp(distance, 0, this.#animationPulse.drawingRect.w),
 				this.#animationPulse.drawingRect.h,
 			)
-			gfx.context.restore()*/
-/*
-const drawStretchedImage = (
-	ctx: CanvasRenderingContext2D,
-	img: HTMLImageElement,
-	x1: number,
-	y1: number,
-	x2: number,
-	y2: number
-) => {
-	const dx = x2 - x1;
-	const dy = y2 - y1;
-	const distance = Math.sqrt(dx * dx + dy * dy);
-	const angle = Math.atan2(dy, dx);
-
-	ctx.save();
-	ctx.translate(x1, y1);
-	// rotate so that "up" points toward (x2, y2)
-	ctx.rotate(angle + Math.PI / 2);
-	// draw image with bottom centre at origin, stretching height to match distance
-	ctx.drawImage(img, -img.width / 2, -distance, img.width, distance);
-	ctx.restore();
-};
-*/
-
+			gfx.context.restore()
 		})
 
 		if(this.#state === PlayerState.WALKING_LEFT) {
