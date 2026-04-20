@@ -6,6 +6,7 @@ import { ImageManager } from './helpers/ImageManager.js'
 import { Cycle } from './helpers/Cycle.js'
 
 export const main = () => {
+	let started = false
 	const audio = new Audio('https://games.stoogoff.com/ld59/audio/theme.mp3')
 
 	audio.loop = true
@@ -90,7 +91,7 @@ export const main = () => {
 	document.addEventListener('keydown', (evt) => {
 		controller.pressKey(evt.keyCode)
 
-		if(controller.isKeyPressed(Keys.PAUSE)) {
+		if(controller.isKeyPressed(Keys.PAUSE) && started) {
 			pauseScreen.toggle()
 		}
 
@@ -108,6 +109,10 @@ export const main = () => {
 	})
 
 	document.addEventListener('click', (evt) => {
+		if(started) return
+
+		started = true
+
 		currentScreen.init(gfx, {
 			currentScore: 0,
 			colourPhase: colourPhases.next(),
